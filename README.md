@@ -1,7 +1,7 @@
 Services Directory App
 ======================
 
-Single-page application for services directory.
+Single-page application for services directory page.
 
 ## Development
 

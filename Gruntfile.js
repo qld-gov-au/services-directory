@@ -41,7 +41,15 @@ module.exports = function (grunt) {
 
         // Banner
         banner: {
-            app: '/*! For development only <%= package.version %> <%= package.name %> <%= grunt.template.today("yyyymmdd") %>T<%= grunt.template.today("HHMM") %> */\n',
+            //app: '/*! For development only <%= package.version %> <%= package.name %> <%= grunt.template.today("yyyymmdd") %>T<%= grunt.template.today("HHMM") %> */\n',
+            app: '/**\n' +
+                ' * <%= package.name %> - Version <%= package.version %>\n' +
+                ' * <%= package.description %>\n' +
+                ' * Author: <%= package.author %>\n' +
+                ' * Build date: <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %>\n' +
+                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= package.author.company %>\n' +
+                ' * Released under the <%= package.license %> license\n' +
+                ' */\n',
             build: '/*! For production <%= package.version %> <%= package.name %> <%= grunt.template.today("yyyymmdd") %>T<%= grunt.template.today("HHMM") %> */\n'
         },
 
@@ -402,7 +410,8 @@ module.exports = function (grunt) {
         'copy:build',
         'copy:app',
         'ssi:build',
-        'uglify:app'
+        'uglify:app',
+        'concat:app'
     ]);
 
     grunt.registerTask('build', [

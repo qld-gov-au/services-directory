@@ -1,0 +1,14 @@
+{
+    "js": {
+        "qgovServices": [
+            "bower_components/jQuery.XDomainRequest/jQuery.XDomainRequest.js",
+            "bower_components/html5-boilerplate/js/plugins.js",
+            "bower_components/placeholders/lib/utils.js",
+            "bower_components/placeholders/lib/main.js",
+            "bower_components/placeholders/lib/adapters/placeholders.jquery.js",
+            "bower_components/routie/lib/routie.js",
+            "bower_components/handlebars/handlebars.js",
+            "src/services/assets/script/app.js"
+        ]
+    }
+}

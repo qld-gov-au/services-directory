@@ -1,0 +1,25 @@
+{
+  "name": "services-directory-app",
+  "version": "2.0.0",
+  "homepage": "https://github.com/qld-gov-au/services-directory-app",
+  "authors": [
+    "Smart Service Queensland"
+  ],
+  "license": "BSD",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jQuery.XDomainRequest": "~1.0.2",
+    "html5-boilerplate": "~4.3.0",
+    "placeholders": "~3.0.2",
+    "routie": "~0.3.2",
+    "handlebars": "~2.0.0"
+  },
+  "description": "Single-page application for services directory page (Do It Online)"
+}

@@ -1,0 +1,25 @@
+{
+	"curly": true,
+	"eqeqeq": true,
+	"immed": true,
+	"latedef": true,
+	"newcap": true,
+	"noarg": true,
+	"quotmark": true,
+	"sub": true,
+	"undef": true,
+	"unused": true,
+	"boss": true,
+	"eqnull": true,
+	"node": true,
+	"trailing": true,
+	"smarttabs": true,
+    "globals": {
+        "jQuery": true,
+        "module": true,
+        "config": true,
+        "document": true,
+        "window": true,
+        "DOMParser": true
+    }
+}

@@ -23,7 +23,6 @@ module.exports = function (grunt) {
         assets: 'assets/v2',
         swe: '../swe_template/build/_htdocs/assets',
         directory: 'services',
-        script: 'app.js',
         interval: 5007
     };
 
@@ -43,7 +42,7 @@ module.exports = function (grunt) {
         banner: {
             //app: '/*! For development only <%= package.version %> <%= package.name %> <%= grunt.template.today("yyyymmdd") %>T<%= grunt.template.today("HHMM") %> */\n',
             app: '/**\n' +
-                ' * <%= package.name %> - Version <%= package.version %>\n' +
+                ' * <%= package.name %>.js - Version <%= package.version %>\n' +
                 ' * <%= package.description %>\n' +
                 ' * Author: <%= package.author %>\n' +
                 ' * Build date: <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %>\n' +
@@ -255,7 +254,7 @@ module.exports = function (grunt) {
                     stripBanners: true
                 },
                 files: {
-                    '<%= config.dist %>/assets/<%= config.directory %>/directory/<%= config.script %>': '<%= config.temp %>/assets/script/<%= config.script %>'
+                    '<%= config.dist %>/<%= config.assets %>/script/apps/<%= package.name %>.js': '<%= config.temp %>/assets/script/<%= package.name %>.js'
                 }
             },
             build: {
@@ -281,7 +280,7 @@ module.exports = function (grunt) {
                     }
                 },
                 files: {
-                    '<%= config.temp %>/assets/script/<%= config.script %>': '<%= assets.js.qgovServices %>'
+                    '<%= config.temp %>/assets/script/<%= package.name %>.js': '<%= assets.js.qgovServices %>'
                 }
             },
             build: {

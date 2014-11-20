@@ -1,5 +1,5 @@
 {
-  "name": "services-directory-app",
+  "name": "services-directory",
   "version": "2.0.0",
   "description": "Single-page application for services directory page (Do It Online)",
   "main": "Gruntfile.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/qld-gov-au/services-directory-app.git"
+    "url": "https://github.com/qld-gov-au/services-directory.git"
   },
   "author": "Smart Service Queensland",
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/qld-gov-au/services-directory-app/issues"
+    "url": "https://github.com/qld-gov-au/services-directory/issues"
   },
-  "homepage": "https://github.com/qld-gov-au/services-directory-app",
+  "homepage": "https://github.com/qld-gov-au/services-directory",
   "dependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",

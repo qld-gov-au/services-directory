@@ -368,6 +368,24 @@ module.exports = function (grunt) {
                     ]
                 }]
             }
+        },
+
+        // Webdriver
+        webdriver: {
+            options: {
+                desiredCapabilities: {
+                    browserName: 'chrome'
+                }
+            },
+            login: {
+                tests: ['test/spec/*.js'],
+                options: {
+                    // overwrite default settings
+                    desiredCapabilities: {
+                        browserName: 'firefox'
+                    }
+                }
+            }
         }
     });
 
@@ -399,17 +417,29 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('test', function (target) {
-        if (target !== 'watch') {
-            grunt.task.run([
-                'clean:build'
-            ]);
-        }
+//        if (target !== 'watch') {
+//            grunt.task.run([
+//                'clean:build'
+//            ]);
+//        }
 
         grunt.task.run([
-            'connect:test',
-            'mocha'
+            'webdriver'
         ]);
     });
+
+//    grunt.registerTask('test', function (target) {
+//        if (target !== 'watch') {
+//            grunt.task.run([
+//                'clean:build'
+//            ]);
+//        }
+//
+//        grunt.task.run([
+//            'connect:test',
+//            'mocha'
+//        ]);
+//    });
 
     grunt.registerTask('dev', [
         'clean:build',

@@ -177,6 +177,18 @@ module.exports = function (grunt) {
                         target: 'http://localhost:9000/<%= config.directory %>' // target url to open
                     }
                 }
+            },
+            test: {
+                options: {
+                    open: false,
+                    port: 9001,
+                    middleware: function (connect) {
+                        return [
+                            connect.static('test'),
+                            connect.static(config.dist)
+                        ];
+                    }
+                }
             }
         },
 
@@ -370,12 +382,15 @@ module.exports = function (grunt) {
             }
         },
 
-        // Webdriver
+        // Webdriver tasks
         webdriver: {
             options: {
                 desiredCapabilities: {
                     browserName: 'chrome'
                 }
+            },
+            test: {
+                tests: 'test/spec/github.js'
             },
             login: {
                 tests: ['test/spec/*.js'],

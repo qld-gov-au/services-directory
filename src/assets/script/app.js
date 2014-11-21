@@ -8,8 +8,6 @@ if (!String.prototype.contains) {
     };
 }
 
-qg.swe.load({ name: 'data', url: 'data.js' });
-
 qg.swe.services = (function ($, swe) {
     'use strict';
 
@@ -269,7 +267,7 @@ qg.swe.services = (function ($, swe) {
                     order = services.get.order(),
                     query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND (\"available\"=\'no\')' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 // run the data query method
-//                qg.data.get(args.resource.url, query, services.show.offline);
+                //qg.data.get(args.resource.url, query, services.show.offline);
             },
             widget: function (category) {
                 // if the category is set, construct a filter OR get everything
@@ -279,7 +277,7 @@ qg.swe.services = (function ($, swe) {
                         order = services.get.order(),
                         query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND (\"category-slug\"=\'' + category + '\')' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                     // run the data query method
-//                    qg.data.get(args.resource.url, query, services.show.widget);
+                    //qg.data.get(args.resource.url, query, services.show.widget);
                 }
             }
         },

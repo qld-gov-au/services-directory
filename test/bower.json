@@ -1,0 +1,9 @@
+{
+  "name": "services-directory",
+  "private": true,
+  "dependencies": {
+    "mocha": "~2.0.1",
+    "chai": "~1.10.0"
+  },
+  "devDependencies": {}
+}

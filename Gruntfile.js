@@ -59,6 +59,19 @@ module.exports = function (grunt) {
                 ' */\n'
         },
 
+        // Shell tasks
+        shell: {
+            options: {
+                stdout: true
+            },
+            protractor_install: {
+                command: 'node ./node_modules/protractor/bin/webdriver-manager update'
+            },
+            npm_install: {
+                command: 'npm install'
+            }
+        },
+
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             options: {
@@ -88,7 +101,7 @@ module.exports = function (grunt) {
             },
             styles: {
                 files: ['<%= config.app %>/assets/style/{,*/}*.css'],
-                tasks: ['newer:copy:styles']
+                tasks: ['newer:copy:styles', 'autoprefixer']
             },
             html: {
                 files: ['<%= config.app %>/{,*/}{,*/}{,*/}*.html'],
@@ -175,6 +188,18 @@ module.exports = function (grunt) {
                 options: {
                     open: {
                         target: 'http://localhost:9000/<%= config.directory %>' // target url to open
+                    }
+                }
+            },
+            test: {
+                options: {
+                    open: false,
+                    port: 9001,
+                    middleware: function (connect) {
+                        return [
+                            connect.static('test'),
+                            connect.static(config.dist)
+                        ];
                     }
                 }
             }
@@ -367,6 +392,59 @@ module.exports = function (grunt) {
                         '!_bak/**'
                     ]
                 }]
+            },
+            styles: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= config.app %>',
+                    dest: '<%= config.dist %>/<%= config.directory %>',
+                    src: [
+                        '{,*/}{,*/}{,*/}*.css',
+                        '!_bak/**'
+                    ]
+                }]
+            }
+        },
+
+        // Add vendor prefixed styles
+        autoprefixer: {
+            options: {
+                browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1']
+            },
+            build: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= config.dist %>/<%= config.directory %>/assets/styles/',
+                        src: '{,*/}*.css',
+                        dest: '<%= config.dist %>/<%= config.directory %>/assets/styles/'
+                    }
+                ]
+            }
+        },
+
+        // Webdriver tasks
+        webdriver: {
+            options: {
+                desiredCapabilities: {
+                    browserName: 'chrome'
+                }
+            },
+            local: {
+                tests: ['test/spec/local.js']
+            },
+            test: {
+                tests: ['test/spec/github.js']
+            },
+            login: {
+                tests: ['test/spec/*.js'],
+                options: {
+                    // overwrite default settings
+                    desiredCapabilities: {
+                        browserName: 'firefox'
+                    }
+                }
             }
         }
     });
@@ -385,9 +463,11 @@ module.exports = function (grunt) {
             'copy:build',
             'copy:app',
             'ssi:build',
+            'jshint:app',
             'uglify:app',
             'concat:app',
-//            'autoprefixer',
+            'copy:styles',
+            'autoprefixer',
             'connect:livereload',
             'watch'
         ]);
@@ -399,25 +479,41 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('test', function (target) {
-        if (target !== 'watch') {
-            grunt.task.run([
-                'clean:build'
-            ]);
-        }
+//        if (target !== 'watch') {
+//            grunt.task.run([
+//                'clean:build'
+//            ]);
+//        }
 
         grunt.task.run([
             'connect:test',
-            'mocha'
+            'webdriver:test'
         ]);
     });
+
+//    grunt.registerTask('test', function (target) {
+//        if (target !== 'watch') {
+//            grunt.task.run([
+//                'clean:build'
+//            ]);
+//        }
+//
+//        grunt.task.run([
+//            'connect:test',
+//            'mocha'
+//        ]);
+//    });
 
     grunt.registerTask('dev', [
         'clean:build',
         'copy:build',
         'copy:app',
         'ssi:build',
+        'jshint:app',
         'uglify:app',
-        'concat:app'
+        'concat:app',
+        'copy:styles',
+        'autoprefixer'
     ]);
 
     grunt.registerTask('build', [

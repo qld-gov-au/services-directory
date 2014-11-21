@@ -4,7 +4,8 @@
   "description": "Single-page application for services directory page (Do It Online)",
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "postinstall": "bower install"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "homepage": "https://github.com/qld-gov-au/services-directory",
   "dependencies": {
     "grunt": "^0.4.5",
+    "grunt-autoprefixer": "^2.0.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.0",
     "grunt-contrib-connect": "^0.8.0",
@@ -27,12 +29,22 @@
     "grunt-contrib-sass": "^0.8.1",
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha": "^0.4.11",
+    "grunt-mocha-webdriver": "^1.1.2",
     "grunt-newer": "^0.8.0",
+    "grunt-protractor-runner": "^1.1.4",
+    "grunt-protractor-webdriver": "^0.1.9",
+    "grunt-selenium-webdriver": "^0.2.431",
+    "grunt-shell-spawn": "^0.3.0",
     "grunt-ssi": "^0.2.1",
+    "grunt-webdriver": "^0.4.4",
+    "grunt-webdriver-jasmine-runner": "^0.3.2",
     "jshint-stylish": "^1.0.0",
     "jshint-stylish-ex": "^0.2.0",
     "load-grunt-config": "^0.16.0",
     "load-grunt-tasks": "^1.0.0",
+    "phantomjs": "^1.9.12",
+    "protractor": "^1.4.0",
     "time-grunt": "^1.0.0"
   },
   "devDependencies": {}

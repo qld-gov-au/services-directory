@@ -88,7 +88,7 @@ module.exports = function (grunt) {
             },
             styles: {
                 files: ['<%= config.app %>/assets/style/{,*/}*.css'],
-                tasks: ['newer:copy:styles']
+                tasks: ['newer:copy:styles', 'autoprefixer']
             },
             html: {
                 files: ['<%= config.app %>/{,*/}{,*/}{,*/}*.html'],
@@ -379,6 +379,35 @@ module.exports = function (grunt) {
                         '!_bak/**'
                     ]
                 }]
+            },
+            styles: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= config.app %>',
+                    dest: '<%= config.dist %>/<%= config.directory %>',
+                    src: [
+                        '{,*/}{,*/}{,*/}*.css',
+                        '!_bak/**'
+                    ]
+                }]
+            }
+        },
+
+        // Add vendor prefixed styles
+        autoprefixer: {
+            options: {
+                browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1']
+            },
+            build: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= config.dist %>/<%= config.directory %>/assets/styles/',
+                        src: '{,*/}*.css',
+                        dest: '<%= config.dist %>/<%= config.directory %>/assets/styles/'
+                    }
+                ]
             }
         },
 
@@ -389,8 +418,11 @@ module.exports = function (grunt) {
                     browserName: 'chrome'
                 }
             },
+            local: {
+                tests: ['test/spec/local.js']
+            },
             test: {
-                tests: 'test/spec/github.js'
+                tests: ['test/spec/github.js']
             },
             login: {
                 tests: ['test/spec/*.js'],
@@ -418,9 +450,11 @@ module.exports = function (grunt) {
             'copy:build',
             'copy:app',
             'ssi:build',
+            'jshint:app',
             'uglify:app',
             'concat:app',
-//            'autoprefixer',
+            'copy:styles',
+            'autoprefixer',
             'connect:livereload',
             'watch'
         ]);
@@ -439,6 +473,7 @@ module.exports = function (grunt) {
 //        }
 
         grunt.task.run([
+            'connect:test',
             'webdriver'
         ]);
     });
@@ -461,8 +496,11 @@ module.exports = function (grunt) {
         'copy:build',
         'copy:app',
         'ssi:build',
+        'jshint:app',
         'uglify:app',
-        'concat:app'
+        'concat:app',
+        'copy:styles',
+        'autoprefixer'
     ]);
 
     grunt.registerTask('build', [

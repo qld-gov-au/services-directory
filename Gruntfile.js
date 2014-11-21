@@ -59,6 +59,19 @@ module.exports = function (grunt) {
                 ' */\n'
         },
 
+        // Shell tasks
+        shell: {
+            options: {
+                stdout: true
+            },
+            protractor_install: {
+                command: 'node ./node_modules/protractor/bin/webdriver-manager update'
+            },
+            npm_install: {
+                command: 'npm install'
+            }
+        },
+
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             options: {

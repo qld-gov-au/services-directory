@@ -67,6 +67,9 @@ module.exports = function (grunt) {
             webdriver: {
                 command: './node_modules/.bin/webdriver-manager start'
             },
+            webdriver_ie: {
+                command: './node_modules/.bin/webdriver-manager update --ie'
+            },
             protractor: {
                 command: './node_modules/.bin/protractor ./test/protractor.conf.js'
             }

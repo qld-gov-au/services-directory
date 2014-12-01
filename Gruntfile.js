@@ -515,7 +515,7 @@ module.exports = function (grunt) {
 //        ]);
 //    });
 
-    grunt.registerTask('development', [
+    grunt.registerTask('dev', [
         'clean:build',
         'copy:build',
         'copy:app',
@@ -527,7 +527,7 @@ module.exports = function (grunt) {
         'autoprefixer'
     ]);
 
-    grunt.registerTask('production', [
+    grunt.registerTask('prod', [
         'clean:build',
         'copy:build',
         'copy:app',
@@ -535,14 +535,6 @@ module.exports = function (grunt) {
         'concat:build',
         'copy:styles',
         'autoprefixer'
-    ]);
-
-    grunt.registerTask('dev', [
-        'development'
-    ]);
-
-    grunt.registerTask('prod', [
-        'production'
     ]);
 
     grunt.registerTask('default', [

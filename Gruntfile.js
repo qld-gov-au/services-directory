@@ -527,7 +527,7 @@ module.exports = function (grunt) {
         'autoprefixer'
     ]);
 
-    grunt.registerTask('prod', [
+    grunt.registerTask('build', [
         'clean:build',
         'copy:build',
         'copy:app',
@@ -538,6 +538,6 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('default', [
-        'production'
+        'build'
     ]);
 };

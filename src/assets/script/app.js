@@ -1,14 +1,7 @@
-/* globals jQuery, qg, Placeholders, Handlebars, routie */
+/* globals jQuery, qg, Placeholders, Handlebars, routie, dataLayer */
 /* jshint unused:false, sub:true, expr:true */
 
-if (!String.prototype.contains) {
-    String.prototype.contains = function (arg) {
-        'use strict';
-        return !!~this.indexOf(arg);
-    };
-}
-
-qg.swe.services = (function ($, swe) {
+qg.swe.services = (function ($, swe, _dl) {
     'use strict';
 
     // jquery objects
@@ -26,6 +19,7 @@ qg.swe.services = (function ($, swe) {
 
     // arguments
     var args = {
+        title: 'Do it online | Queensland Government',
         orderBy: 'service',
         category: {
             title: 'Transport and motoring',
@@ -40,32 +34,44 @@ qg.swe.services = (function ($, swe) {
     // locations
     var locations = {
         root: {
-            'kiosk-friendly': null,
-            'kiosk-only': false,
-            'print-required': null,
-            'wide-display': false
+            title: args.title,
+            params: {
+                'kiosk-friendly': null,
+                'kiosk-only': false,
+                'print-required': null,
+                'wide-display': false
+            }
         },
         jimboomba: {
-            'kiosk-friendly': true,
-            'kiosk-only': true,
-            'print-required': null,
-            'wide-display': false
+            title: 'Jimboomba - ' + args.title,
+            params: {
+                'kiosk-friendly': true,
+                'kiosk-only': true,
+                'print-required': null,
+                'wide-display': false
+            }
         },
         laidley: {
-            'kiosk-friendly': true,
-            'kiosk-only': true,
-            'print-required': null,
-            'wide-display': true
+            title: 'Laidley - ' + args.title,
+            params: {
+                'kiosk-friendly': true,
+                'kiosk-only': true,
+                'print-required': null,
+                'wide-display': true
+            }
         },
         plainlands: {
-            'kiosk-friendly': true,
-            'kiosk-only': true,
-            'print-required': null,
-            'wide-display': true
+            title: 'Plainlands - ' + args.title,
+            params: {
+                'kiosk-friendly': true,
+                'kiosk-only': true,
+                'print-required': null,
+                'wide-display': true
+            }
         }
     };
 
-    var services = {
+    var app = {
         init: function () {
             // properties
             this.props = {
@@ -74,7 +80,8 @@ qg.swe.services = (function ($, swe) {
                 query: null,
                 params: null,
                 location: null,
-                kiosk: null
+                kiosk: null,
+                page: null
             };
 
             // events
@@ -86,56 +93,76 @@ qg.swe.services = (function ($, swe) {
             this.set.toggle();
 
             // empty
-            services.empty();
+            app.empty();
 
             // routes
             routie({
                 '/': function () {
                     //console.log('Route: root');
-                    services.empty();
-                    services.set.form();
-                    services.set.location();
-                    services.set.route();
-                    services.set.params(services.props.location);
-                    services.set.kiosk(services.props.location);
-                    services.get.query();
-                    services.data.online();
-                    services.data.offline();
-                    services.data.widget(args.category.slug);
+                    app.empty();
+                    app.set.form();
+                    app.set.location();
+                    app.set.route();
+                    app.set.params(app.props.location);
+                    app.set.kiosk(app.props.location);
+                    app.get.query();
+                    app.get.page();
+                    app.data.online();
+                    app.data.offline();
+                    app.data.widget(args.category.slug);
+                    // dataLayer push
+                    _dl.push({
+                        'event': 'VirtualPageview',
+                        'virtualPageURL': app.props.page,
+                        'virtualPageTitle': locations[app.props.location].title
+                    });
                 },
                 '/:query': function (value) {
                     //console.log('Route: query');
-                    services.empty();
-                    services.set.form(value);
-                    services.set.location();
-                    services.set.route();
-                    services.set.params(services.props.location);
-                    services.set.kiosk(services.props.location);
-                    services.get.query();
-                    services.data.online();
-                    services.data.offline();
-                    services.data.widget(args.category.slug);
+                    app.empty();
+                    app.set.form(value);
+                    app.set.location();
+                    app.set.route();
+                    app.set.params(app.props.location);
+                    app.set.kiosk(app.props.location);
+                    app.get.query();
+                    app.get.page();
+                    app.data.online();
+                    app.data.offline();
+                    app.data.widget(args.category.slug);
+                    // dataLayer push
+                    _dl.push({
+                        'event': 'VirtualPageview',
+                        'virtualPageURL': app.props.page,
+                        'virtualPageTitle': locations[app.props.location].title
+                    });
                 },
                 '/location/:name': function (value) {
                     //console.log('Route: location');
-                    services.empty();
-                    services.set.form(value);
-                    services.set.location(value);
-                    services.set.route('/location/' + value);
-                    services.set.params(services.props.location);
-                    services.set.kiosk(services.props.location);
-                    services.get.query();
-                    if (!!services.props.params) {
-                        services.data.online();
-                        services.data.offline();
-                        services.data.widget(args.category.slug);
+                    app.empty();
+                    app.set.form(value);
+                    app.set.location(value);
+                    app.set.route('/location/' + value);
+                    app.set.params(app.props.location);
+                    app.set.kiosk(app.props.location);
+                    app.get.query();
+                    app.get.page();
+                    if (!!app.props.params) {
+                        app.data.online();
+                        app.data.offline();
+                        app.data.widget(args.category.slug);
                     }
-
+                    // dataLayer push
+                    _dl.push({
+                        'event': 'VirtualPageview',
+                        'virtualPageURL': app.props.page,
+                        'virtualPageTitle': locations[app.props.location].title
+                    });
                 }
             });
 
             // run route
-            routie(services.props.route + (!!services.props.query ? ('?' + services.props.query) : ''));
+            routie(app.props.route + (!!app.props.query ? ('?' + app.props.query) : ''));
         },
         empty: function () {
             $list.empty();
@@ -149,17 +176,17 @@ qg.swe.services = (function ($, swe) {
                     $form.find('.form-section').find('input, select').each(function () {
                         !$(this).val() || values.push($(this).attr('id') + '=' + $(this).val().replace(/ /g, '+'));
                     });
-                    services.set.query(values);
+                    app.set.query(values);
                 });
             },
             reset: function () {
                 $form.find('.reset').bind('click', function (event) {
                     event.preventDefault();
-                    services.get.route();
+                    app.get.route();
                     if (!!window.location.search) {
-                        routie(services.props.route + window.location.search);
+                        routie(app.props.route + window.location.search);
                     } else {
-                        routie(services.props.route);
+                        routie(app.props.route);
                     }
                 });
             },
@@ -183,7 +210,7 @@ qg.swe.services = (function ($, swe) {
                         if (!result.type.hasOwnProperty(type)) {
                             result.type[type] = {
                                 services: [],
-                                title: services.props.types[type],
+                                title: app.props.types[type],
                                 image: type
                             };
                         }
@@ -220,17 +247,17 @@ qg.swe.services = (function ($, swe) {
             },
             online: function (data) {
                 if (data.success && data.result.records.length) {
-                    var result = services.parse.online(data.result.records),
+                    var result = app.parse.online(data.result.records),
                         wrapper = {items: result},
                         populate = Handlebars.compile(template.list);
                     $list.append(populate(wrapper)).trigger('x-height-change');
                 } else {
-                    services.show.error(null);
+                    app.show.error(null);
                 }
             },
             offline: function (data) {
                 if (data.success && data.result.records.length) {
-                    var result = services.parse.offline(data.result.records),
+                    var result = app.parse.offline(data.result.records),
                         wrapper = {items: result},
                         populate = Handlebars.compile(template.warn);
                     $list.prepend(populate(wrapper)).trigger('x-height-change');
@@ -238,7 +265,7 @@ qg.swe.services = (function ($, swe) {
             },
             widget: function (data) {
                 if (data.success && data.result.records.length) {
-                    var result = services.parse.widget(data.result.records),
+                    var result = app.parse.widget(data.result.records),
                         wrapper = {items: result},
                         populate = Handlebars.compile(template.widget);
                     $widget.append(populate(wrapper)).trigger('x-height-change');
@@ -248,45 +275,74 @@ qg.swe.services = (function ($, swe) {
         data: {
             online: function () {
                 var query = null,
-                    filter = services.get.filter(),
-                    params = services.get.params(),
-                    order = services.get.order();
+                    filter = app.get.filter(),
+                    params = app.get.params(),
+                    order = app.get.order();
                 // if the keywords are set, construct a filter OR get everything
-                if (!!services.props.query && services.props.query.contains('keywords')) {
-                    var keywords = services.props.query.split('keywords').pop().substr(1);
+                if (!!app.props.query && app.props.query.contains('keywords')) {
+                    var keywords = app.props.query.split('keywords').pop().substr(1);
                     query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery( \'english\', \'' + keywords + '\' ) query' + filter + params + ' AND _full_text @@ query' + ' AND (\"available\"=\'yes\')' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 } else {
                     query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND (\"available\"=\'yes\')' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 }
                 // run the data query method
-                qg.data.get(args.resource.url, query, services.show.online);
+                qg.data.get(args.resource.url, query, app.show.online);
             },
             offline: function () {
-                var filter = services.get.filter(),
-                    params = services.get.params(),
-                    order = services.get.order(),
+                var filter = app.get.filter(),
+                    params = app.get.params(),
+                    order = app.get.order(),
                     query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND (\"available\"=\'no\')' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 // run the data query method
-                //qg.data.get(args.resource.url, query, services.show.offline);
+                //qg.data.get(args.resource.url, query, app.show.offline);
             },
             widget: function (category) {
                 // if the category is set, construct a filter OR get everything
                 if (!!category && !!$widget.length) {
                     var filter = ' WHERE 1=1',
-                        params = services.get.params(),
-                        order = services.get.order(),
+                        params = app.get.params(),
+                        order = app.get.order(),
                         query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND (\"category-slug\"=\'' + category + '\')' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                     // run the data query method
-                    //qg.data.get(args.resource.url, query, services.show.widget);
+                    //qg.data.get(args.resource.url, query, app.show.widget);
                 }
             }
         },
+//        virtual: {
+//            push: function () {
+//                app.virtual.check();
+//                _dl.push({
+//                    'event': 'VirtualPageview',
+//                    'virtualPageURL': app.props.page,
+//                    'virtualPageTitle': locations[app.props.location].title
+//                });
+//                app.virtual.check();
+//                console.log(_dl);
+//            },
+//            remove: function () {
+//
+//            },
+//            check: function () {
+//                $.each( _dl, function(key, item) {
+//                    console.log(key, item);
+//                    if (item.event === 'VirtualPageview') {
+//                        delete _dl[key];
+//                    }
+//                });
+//            }
+//        },
         check: {
             location: function (value) {
                 return locations.hasOwnProperty(value);
             }
         },
         get: {
+            page: function () {
+                var parts = window.location.toString().split('#');
+                var location = parts.shift();
+                var query = parts.pop();
+                app.props.page = location + query.replace('/', '');
+            },
             types: function () {
                 var list = {};
                 $('#type').find('option').each(function (key, item) {
@@ -294,26 +350,26 @@ qg.swe.services = (function ($, swe) {
                         list[$(item).val()] = $(item).text();
                     }
                 });
-                services.props.types = list;
+                app.props.types = list;
             },
             query: function () {
                 if (!!window.location.hash && window.location.hash.contains('?')) {
-                    services.props.query = window.location.hash.split('?').pop();
+                    app.props.query = window.location.hash.split('?').pop();
                 } else {
-                    services.props.query = null;
+                    app.props.query = null;
                 }
             },
             route: function () {
                 if (!!window.location.hash) {
-                    services.props.route = window.location.hash.split('?').shift().substr(1);
+                    app.props.route = window.location.hash.split('?').shift().substr(1);
                 } else {
-                    services.props.route = '/';
+                    app.props.route = '/';
                 }
             },
             order: function () {
                 var count = 0,
                     result = '(CASE \"type-slug\"';
-                $.each( services.props.types, function( key, value ) {
+                $.each(app.props.types, function (key, value) {
                     count++;
                     result += ' WHEN \'' + key + '\' THEN ' + (count);
                 });
@@ -322,8 +378,8 @@ qg.swe.services = (function ($, swe) {
             },
             filter: function () {
                 var query = ' WHERE 1=1';
-                if (!!services.props.query) {
-                    var values = services.props.query.split('&');
+                if (!!app.props.query) {
+                    var values = app.props.query.split('&');
                     for (var key in values) {
                         if (values.hasOwnProperty(key)) {
                             var column = values[key].split('=').shift(),
@@ -343,9 +399,9 @@ qg.swe.services = (function ($, swe) {
             },
             params: function () {
                 var query = '';
-                if (!!services.props.params) {
+                if (!!app.props.params) {
                     var array = [];
-                    var values = services.props.params.split('&');
+                    var values = app.props.params.split('&');
                     for (var key in values) {
                         if (values.hasOwnProperty(key)) {
                             var column = values[key].split('=').shift(),
@@ -360,9 +416,9 @@ qg.swe.services = (function ($, swe) {
             },
             location: function () {
                 var values = [];
-                $.map(locations[services.props.location], function (value, key) {
+                $.map(locations[app.props.location].params, function (value, key) {
                     if (value !== null && key !== 'wide-display') {
-                        values.push(key + '=' + services.set.truth(value));
+                        values.push(key + '=' + app.set.truth(value));
                     }
                 });
                 return values.join('&');
@@ -371,16 +427,16 @@ qg.swe.services = (function ($, swe) {
         set: {
             query: function (value) {
                 // set query
-                services.props.query = value.join('&');
+                app.props.query = value.join('&');
                 // run route
-                routie(services.props.route + (!!services.props.query ? ('?' + services.props.query) : ''));
+                routie(app.props.route + (!!app.props.query ? ('?' + app.props.query) : ''));
             },
             route: function (value) {
                 // if the value is passed in then route is set
                 if (!!value) {
-                    services.props.route = (value.contains('?')) ? value.split('?').shift() : value;
+                    app.props.route = (value.contains('?')) ? value.split('?').shift() : value;
                 } else {
-                    services.props.route = '/';
+                    app.props.route = '/';
                 }
             },
             form: function (value) {
@@ -416,14 +472,14 @@ qg.swe.services = (function ($, swe) {
             params: function (value) {
                 // check if location is valid, then set params
                 if (!!value) {
-                    if (!!services.check.location(value)) {
-                        services.props.params = services.get.location();
+                    if (!!app.check.location(value)) {
+                        app.props.params = app.get.location();
                     } else {
-                        services.show.error('This location is unavailable.');
-                        services.props.params = null;
+                        app.show.error('This location is unavailable.');
+                        app.props.params = null;
                     }
                 } else {
-                    services.props.params = null;
+                    app.props.params = null;
                 }
             },
             truth: function (value) {
@@ -431,26 +487,26 @@ qg.swe.services = (function ($, swe) {
             },
             location: function (value) {
                 if (!!value) {
-                    services.props.location = value.split('?').shift();
+                    app.props.location = value.split('?').shift();
                 } else {
-                    services.props.location = 'root';
+                    app.props.location = 'root';
                 }
             },
             kiosk: function (value) {
-                if (!!locations.hasOwnProperty(value) && locations[value]['wide-display']) {
-                    services.props.kiosk = !!locations[value]['wide-display'];
-                    $( 'body' ).addClass( 'kiosk' );
+                if (!!locations.hasOwnProperty(value) && locations[value].params['wide-display']) {
+                    app.props.kiosk = !!locations[value].params['wide-display'];
+                    $('body').addClass('kiosk');
                 } else {
-                    $( 'body' ).removeClass( 'kiosk' );
+                    $('body').removeClass('kiosk');
                 }
             },
             toggle: function () {
                 $search.find('.widget-header').append($('<span class="action"><a href="#" id="services-toggle" class="up">Toggle</a></span>'));
-                services.event.toggle();
+                app.event.toggle();
             }
         }
     };
 
-    return services;
+    return app;
 
-}(jQuery, qg.swe));
+}(jQuery, qg.swe, dataLayer));

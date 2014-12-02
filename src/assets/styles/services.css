@@ -1,4 +1,8 @@
 
+.status {
+    margin-bottom: 1.66em;
+}
+
 .services-list .service-type .header {
     position: relative;
     min-height: 75px;

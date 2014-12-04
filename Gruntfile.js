@@ -110,15 +110,24 @@ module.exports = function (grunt) {
                 files: ['<%= config.app %>/{,*/}{,*/}{,*/}*.html'],
                 tasks: ['newer:copy:html', 'ssi:build']
             },
+            swe: {
+                files: ['<%= config.swe %>/v2/{,*/}{,*/}{,*/}*'],
+                tasks: ['newer:copy:build']
+            },
             livereload: {
                 options: {
-                    livereload: '<%= connect.options.livereload %>'
+                    livereload: '<%= connect.options.livereload %>',
+                    interval: 10014
                 },
                 files: [
+                    // build files
                     '<%= config.dist %>/{,*/}*.html',
+                    '<%= config.dist %>/<%= config.directory %>/assets/{,*/}*.css',
+                    '<%= config.dist %>/<%= config.assets %>/script/apps/*.js',
+                    // swe files
                     '<%= config.dist %>/assets/images/{,*/}*',
                     '<%= config.dist %>/assets/includes/{,*/}*',
-                    '<%= config.dist %>/assets/<%= config.directory %>/newsroom/{,*/}*'
+                    '<%= config.dist %>/assets/{,*/}{,*/}{,*/}*'
                 ]
             }
         },

@@ -97,7 +97,7 @@ qg.swe.services = (function ( $, swe, _dl ) {
 
             // routes
             routie({
-                '/': function () {
+                '!/': function () {
                     //console.log( 'Route: root' );
                     app.empty();
                     app.set.form();
@@ -117,7 +117,7 @@ qg.swe.services = (function ( $, swe, _dl ) {
 //                        'virtualPageTitle': locations[ app.props.location ].title
 //                    });
                 },
-                '/:query': function ( value ) {
+                '!/:query': function ( value ) {
                     //console.log( 'Route: query' );
                     app.empty();
                     app.set.form( value );
@@ -137,12 +137,12 @@ qg.swe.services = (function ( $, swe, _dl ) {
 //                        'virtualPageTitle': locations[ app.props.location ].title
 //                    });
                 },
-                '/location/:name': function ( value ) {
+                '!/location/:name': function ( value ) {
                     //console.log( 'Route: location' );
                     app.empty();
                     app.set.form( value );
                     app.set.location( value );
-                    app.set.route( '/location/' + value );
+                    app.set.route( '!/location/' + value );
                     app.set.params( app.props.location );
                     app.set.kiosk( app.props.location );
                     app.get.query();
@@ -363,7 +363,7 @@ qg.swe.services = (function ( $, swe, _dl ) {
                 if ( !!window.location.hash ) {
                     app.props.route = window.location.hash.split( '?' ).shift().substr( 1 );
                 } else {
-                    app.props.route = '/';
+                    app.props.route = '!/';
                 }
             },
             order: function () {
@@ -436,7 +436,7 @@ qg.swe.services = (function ( $, swe, _dl ) {
                 if ( !!value ) {
                     app.props.route = ( value.contains( '?' ) ) ? value.split( '?' ).shift() : value;
                 } else {
-                    app.props.route = '/';
+                    app.props.route = '!/';
                 }
             },
             form: function ( value ) {

@@ -121,13 +121,13 @@ module.exports = function (grunt) {
                 },
                 files: [
                     // build files
-                    '<%= config.dist %>/{,*/}*.html',
-                    '<%= config.dist %>/<%= config.directory %>/assets/{,*/}*.css',
-                    '<%= config.dist %>/<%= config.assets %>/script/apps/*.js',
-                    // swe files
-                    '<%= config.dist %>/assets/images/{,*/}*',
-                    '<%= config.dist %>/assets/includes/{,*/}*',
-                    '<%= config.dist %>/assets/{,*/}{,*/}{,*/}*'
+//                    '<%= config.dist %>/{,*/}*.html',
+//                    '<%= config.dist %>/<%= config.directory %>/assets/{,*/}*.css',
+//                    '<%= config.dist %>/assets/script/apps/*.js',
+//                    // swe files
+//                    '<%= config.dist %>/assets/images/{,*/}*',
+//                    '<%= config.dist %>/assets/includes/{,*/}*',
+//                    '<%= config.dist %>/assets/{,*/}{,*/}{,*/}*'
                 ]
             }
         },
@@ -308,7 +308,7 @@ module.exports = function (grunt) {
                     stripBanners: true
                 },
                 files: {
-                    '<%= config.dist %>/<%= config.assets %>/script/apps/<%= pkg.name %>.js': '<%= config.temp %>/assets/script/<%= pkg.name %>.js'
+                    '<%= config.dist %>/assets/script/apps/<%= pkg.name %>.js': '<%= config.temp %>/assets/script/<%= pkg.name %>.js'
                 }
             },
             build: {
@@ -400,6 +400,18 @@ module.exports = function (grunt) {
                             '{,*/}*.html',
                             'assets/images/**/*.*',
                             'assets/includes/**/*.*',
+                            '!assets/includes/templates/**/*.*',
+                            '!_bak/**'
+                        ]
+                    },
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.app %>/assets',
+                        dest: '<%= config.dist %>/assets/<%= config.directory %>',
+                        src: [
+                            'includes/templates/{,*/}*.html',
+                            'style/{,*/}*.css',
                             '!_bak/**'
                         ]
                     }
@@ -413,7 +425,17 @@ module.exports = function (grunt) {
                         cwd: '<%= config.app %>',
                         dest: '<%= config.dist %>/<%= config.directory %>',
                         src: [
-                            '{,*/}{,*/}{,*/}*.html',
+                            '*.html',
+                            '!_bak/**'
+                        ]
+                    },
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.app %>/assets',
+                        dest: '<%= config.dist %>/assets/<%= config.directory %>',
+                        src: [
+                            'includes/templates/{,*/}*.html',
                             '!_bak/**'
                         ]
                     }
@@ -424,10 +446,10 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         dot: true,
-                        cwd: '<%= config.app %>',
-                        dest: '<%= config.dist %>/<%= config.directory %>',
+                        cwd: '<%= config.app %>/assets',
+                        dest: '<%= config.dist %>/assets/<%= config.directory %>',
                         src: [
-                            '{,*/}{,*/}{,*/}*.css',
+                            'style/{,*/}*.css',
                             '!_bak/**'
                         ]
                     }

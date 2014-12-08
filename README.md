@@ -18,4 +18,9 @@ To build file for production:
 
 ## Testing
 
-Coming soon.
+Install the Webdriver Manager:
+
+```npm install```
+
+
+

@@ -4,7 +4,7 @@
   "description": "Single-page application for services directory page (Do It Online)",
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "test",
+    "install": "node ./node_modules/protractor/bin/webdriver-manager update",
     "postinstall": "bower install"
   },
   "repository": {
@@ -29,16 +29,10 @@
     "grunt-contrib-sass": "^0.8.1",
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-mocha": "^0.4.11",
-    "grunt-mocha-webdriver": "^1.1.2",
     "grunt-newer": "^0.8.0",
-    "grunt-protractor-runner": "^1.1.4",
-    "grunt-protractor-webdriver": "^0.1.9",
-    "grunt-selenium-webdriver": "^0.2.431",
     "grunt-shell-spawn": "^0.3.0",
     "grunt-ssi": "^0.2.1",
     "grunt-webdriver": "^0.4.4",
-    "grunt-webdriver-jasmine-runner": "^0.3.2",
     "jshint-stylish": "^1.0.0",
     "jshint-stylish-ex": "^0.2.0",
     "load-grunt-config": "^0.16.0",

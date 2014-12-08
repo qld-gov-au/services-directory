@@ -36,27 +36,20 @@ module.exports = function (grunt) {
         assets: grunt.file.readJSON('assets.json'),
 
         // Package
-        package: grunt.file.readJSON('package.json'),
+        pkg: grunt.file.readJSON('package.json'),
 
         // Banner
         banner: {
             app: '/**\n' +
                 ' * ! For development only\n' +
-                ' * <%= package.name %>.js - Version <%= package.version %>\n' +
-                ' * <%= package.description %>\n' +
-                ' * Author: <%= package.author %>\n' +
+                ' * <%= pkg.name %>.js - Version <%= pkg.version %>\n' +
+                ' * <%= pkg.description %>\n' +
+                ' * Author: <%= pkg.author %>\n' +
                 ' * Build date: <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %>\n' +
-                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= package.author.company %>\n' +
-                ' * Released under the <%= package.license %> license\n' +
+                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>\n' +
+                ' * Released under the <%= pkg.license %> license\n' +
                 ' */\n',
-            build: '/*! For production\n' +
-                ' * <%= package.name %>.js - Version <%= package.version %>\n' +
-                ' * <%= package.description %>\n' +
-                ' * Author: <%= package.author %>\n' +
-                ' * Build date: <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %>\n' +
-                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= package.author.company %>\n' +
-                ' * Released under the <%= package.license %> license\n' +
-                ' */\n'
+            build: '/*! For production - <%= pkg.name %>.js - Version <%= pkg.version %> <%= grunt.template.today("yyyymmdd") %>T<%= grunt.template.today("HHMM") %> */\n'
         },
 
         // Shell tasks
@@ -64,11 +57,17 @@ module.exports = function (grunt) {
             options: {
                 stdout: true
             },
-            protractor_install: {
+            update: {
                 command: 'node ./node_modules/protractor/bin/webdriver-manager update'
             },
-            npm_install: {
-                command: 'npm install'
+            webdriver: {
+                command: './node_modules/.bin/webdriver-manager start'
+            },
+            webdriver_ie: {
+                command: './node_modules/.bin/webdriver-manager update --ie'
+            },
+            protractor: {
+                command: './node_modules/.bin/protractor ./test/protractor.conf.js'
             }
         },
 
@@ -107,15 +106,24 @@ module.exports = function (grunt) {
                 files: ['<%= config.app %>/{,*/}{,*/}{,*/}*.html'],
                 tasks: ['newer:copy:html', 'ssi:build']
             },
+            swe: {
+                files: ['<%= config.swe %>/v2/{,*/}{,*/}{,*/}*'],
+                tasks: ['newer:copy:build']
+            },
             livereload: {
                 options: {
-                    livereload: '<%= connect.options.livereload %>'
+                    livereload: '<%= connect.options.livereload %>',
+                    interval: 10014
                 },
                 files: [
-                    '<%= config.dist %>/{,*/}*.html',
-                    '<%= config.dist %>/assets/images/{,*/}*',
-                    '<%= config.dist %>/assets/includes/{,*/}*',
-                    '<%= config.dist %>/assets/<%= config.directory %>/newsroom/{,*/}*'
+                    // build files
+//                    '<%= config.dist %>/{,*/}*.html',
+//                    '<%= config.dist %>/<%= config.directory %>/assets/{,*/}*.css',
+//                    '<%= config.dist %>/assets/script/apps/*.js',
+//                    // swe files
+//                    '<%= config.dist %>/assets/images/{,*/}*',
+//                    '<%= config.dist %>/assets/includes/{,*/}*',
+//                    '<%= config.dist %>/assets/{,*/}{,*/}{,*/}*'
                 ]
             }
         },
@@ -129,12 +137,14 @@ module.exports = function (grunt) {
                     baseDir: 'build',
                     cacheDir: '.tmp/ssi'
                 },
-                files: [{
-                    expand: true,
-                    cwd: 'build/<%= config.directory %>',
-                    src: ['*.html'],
-                    dest: 'build/<%= config.directory %>'
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'build/<%= config.directory %>',
+                        src: ['*.html'],
+                        dest: 'build/<%= config.directory %>'
+                    }
+                ]
             }
         },
 
@@ -147,29 +157,29 @@ module.exports = function (grunt) {
                 livereload: 35729,
                 // Change this to '0.0.0.0' to access the server from outside
                 hostname: 'localhost',
-                middleware: function(connect, options, middlewares) {
+                middleware: function (connect, options, middlewares) {
                     // clean up our output
                     options = options || {};
                     options.index = options.index || 'index.html';
-                    middlewares.unshift(function globalIncludes( req, res, next ) {
+                    middlewares.unshift(function globalIncludes(req, res, next) {
                         var fs = require('fs');
-                        var filename = require( 'url' ).parse( req.url ).pathname;
+                        var filename = require('url').parse(req.url).pathname;
 
-                        if ( /\/$/.test( filename )) {
+                        if (/\/$/.test(filename)) {
                             filename += options.index;
                         }
 
-                        if ( /\.html$/.test( filename )) {
-                            if ( /\.html$/.test( filename )) {
-                                fs.readFile( options.base + filename, 'utf-8', function( err, data ) {
-                                    if ( err ) {
-                                        next( err );
+                        if (/\.html$/.test(filename)) {
+                            if (/\.html$/.test(filename)) {
+                                fs.readFile(options.base + filename, 'utf-8', function (err, data) {
+                                    if (err) {
+                                        next(err);
                                     } else {
-                                        res.writeHead( 200, { 'Content-Type': 'text/html' });
-                                        data = data.split( 'title=<!--#echo encoding="url" var="title" -->' );
-                                        res.write( data.shift(), 'utf-8' );
-                                        data.forEach(function(chunk) {
-                                            res.write( chunk, 'utf-8' );
+                                        res.writeHead(200, { 'Content-Type': 'text/html' });
+                                        data = data.split('title=<!--#echo encoding="url" var="title" -->');
+                                        res.write(data.shift(), 'utf-8');
+                                        data.forEach(function (chunk) {
+                                            res.write(chunk, 'utf-8');
                                         });
                                         res.end();
                                     }
@@ -208,13 +218,15 @@ module.exports = function (grunt) {
         // Empties folders to start fresh
         clean: {
             build: {
-                files: [{
-                    dot: true,
-                    src: [
-                        '<%= config.temp %>',
-                        '<%= config.dist %>'
-                    ]
-                }]
+                files: [
+                    {
+                        dot: true,
+                        src: [
+                            '<%= config.temp %>',
+                            '<%= config.dist %>'
+                        ]
+                    }
+                ]
             }
         },
 
@@ -248,34 +260,40 @@ module.exports = function (grunt) {
                 loadPath: 'bower_components'
             },
             app: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= config.app %>/styles',
-                    src: ['*.{scss,sass}'],
-                    dest: '.tmp/styles',
-                    ext: '.css'
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= config.app %>/styles',
+                        src: ['*.{scss,sass}'],
+                        dest: '.tmp/styles',
+                        ext: '.css'
+                    }
+                ]
             },
             build: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= config.app %>/styles',
-                    src: ['*.{scss,sass}'],
-                    dest: '.tmp/styles',
-                    ext: '.css'
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= config.app %>/styles',
+                        src: ['*.{scss,sass}'],
+                        dest: '.tmp/styles',
+                        ext: '.css'
+                    }
+                ]
             }
         },
 
         // The following *-min tasks produce minified files in the dist folder
         imagemin: {
             build: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= config.app %>/images',
-                    src: '{,*/}*.{gif,jpeg,jpg,png}',
-                    dest: '<%= config.dist %>/images'
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= config.app %>/images',
+                        src: '{,*/}*.{gif,jpeg,jpg,png}',
+                        dest: '<%= config.dist %>/images'
+                    }
+                ]
             }
         },
 
@@ -286,7 +304,7 @@ module.exports = function (grunt) {
                     stripBanners: true
                 },
                 files: {
-                    '<%= config.dist %>/<%= config.assets %>/script/apps/<%= package.name %>.js': '<%= config.temp %>/assets/script/<%= package.name %>.js'
+                    '<%= config.dist %>/assets/script/apps/<%= pkg.name %>.js': '<%= config.temp %>/assets/script/<%= pkg.name %>.js'
                 }
             },
             build: {
@@ -312,7 +330,7 @@ module.exports = function (grunt) {
                     }
                 },
                 files: {
-                    '<%= config.temp %>/assets/script/<%= package.name %>.js': '<%= assets.js.qgovServices %>'
+                    '<%= config.temp %>/assets/script/<%= pkg.name %>.js': '<%= assets.js.qgovServices %>'
                 }
             },
             build: {
@@ -368,42 +386,70 @@ module.exports = function (grunt) {
                 ]
             },
             app: {
-                files: [{
-                    expand: true,
-                    dot: true,
-                    cwd: '<%= config.app %>',
-                    dest: '<%= config.dist %>/<%= config.directory %>',
-                    src: [
-                        '{,*/}*.html',
-                        'assets/images/**/*.*',
-                        'assets/includes/**/*.*',
-                        '!_bak/**'
-                    ]
-                }]
+                files: [
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.app %>',
+                        dest: '<%= config.dist %>/<%= config.directory %>',
+                        src: [
+                            '{,*/}*.html',
+                            'assets/images/**/*.*',
+                            'assets/includes/**/*.*',
+                            '!assets/includes/templates/**/*.*',
+                            '!_bak/**'
+                        ]
+                    },
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.app %>/assets',
+                        dest: '<%= config.dist %>/assets/<%= config.directory %>',
+                        src: [
+                            'includes/templates/{,*/}*.html',
+                            'style/{,*/}*.css',
+                            '!_bak/**'
+                        ]
+                    }
+                ]
             },
             html: {
-                files: [{
-                    expand: true,
-                    dot: true,
-                    cwd: '<%= config.app %>',
-                    dest: '<%= config.dist %>/<%= config.directory %>',
-                    src: [
-                        '{,*/}{,*/}{,*/}*.html',
-                        '!_bak/**'
-                    ]
-                }]
+                files: [
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.app %>',
+                        dest: '<%= config.dist %>/<%= config.directory %>',
+                        src: [
+                            '*.html',
+                            '!_bak/**'
+                        ]
+                    },
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.app %>/assets',
+                        dest: '<%= config.dist %>/assets/<%= config.directory %>',
+                        src: [
+                            'includes/templates/{,*/}*.html',
+                            '!_bak/**'
+                        ]
+                    }
+                ]
             },
             styles: {
-                files: [{
-                    expand: true,
-                    dot: true,
-                    cwd: '<%= config.app %>',
-                    dest: '<%= config.dist %>/<%= config.directory %>',
-                    src: [
-                        '{,*/}{,*/}{,*/}*.css',
-                        '!_bak/**'
-                    ]
-                }]
+                files: [
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.app %>/assets',
+                        dest: '<%= config.dist %>/assets/<%= config.directory %>',
+                        src: [
+                            'style/{,*/}*.css',
+                            '!_bak/**'
+                        ]
+                    }
+                ]
             }
         },
 
@@ -459,15 +505,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
-            'clean:build',
-            'copy:build',
-            'copy:app',
-            'ssi:build',
-            'jshint:app',
-            'uglify:app',
-            'concat:app',
-            'copy:styles',
-            'autoprefixer',
+            'dev',
             'connect:livereload',
             'watch'
         ]);
@@ -521,7 +559,9 @@ module.exports = function (grunt) {
         'copy:build',
         'copy:app',
         'uglify:build',
-        'concat:build'
+        'concat:build',
+        'copy:styles',
+        'autoprefixer'
     ]);
 
     grunt.registerTask('default', [

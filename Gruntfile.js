@@ -49,14 +49,7 @@ module.exports = function (grunt) {
                 ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>\n' +
                 ' * Released under the <%= pkg.license %> license\n' +
                 ' */\n',
-            build: '/*! For production\n' +
-                ' * <%= pkg.name %>.js - Version <%= pkg.version %>\n' +
-                ' * <%= pkg.description %>\n' +
-                ' * Author: <%= pkg.author %>\n' +
-                ' * Build date: <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %>\n' +
-                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>\n' +
-                ' * Released under the <%= pkg.license %> license\n' +
-                ' */\n'
+            build: '/*! For production - <%= pkg.name %>.js - Version <%= pkg.version %> <%= grunt.template.today("yyyymmdd") %>T<%= grunt.template.today("HHMM") %> */\n'
         },
 
         // Shell tasks
@@ -64,9 +57,9 @@ module.exports = function (grunt) {
             options: {
                 stdout: true
             },
-//            update: {
-//                command: './node_modules/protractor/bin/webdriver-manager update'
-//            },
+            update: {
+                command: 'node ./node_modules/protractor/bin/webdriver-manager update'
+            },
             webdriver: {
                 command: './node_modules/.bin/webdriver-manager start'
             },

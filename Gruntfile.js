@@ -469,7 +469,16 @@ module.exports = function (grunt) {
                 command: './node_modules/.bin/protractor ./test/spec/protractor.conf.js'
             },
             browserstack: {
-                command: './node_modules/protractor/selenium/BrowserStackLocal r9cBSaXLmXf331LQsYAd localhost,9000,0'
+                command: './node_modules/browserstacklocal/win.exe r9cBSaXLmXf331LQsYAd localhost,9000,0'
+            },
+            command: {
+                command: './test/cmd/setup.cmd'
+            },
+            command_browserstack: {
+                command: './test/cmd/browserstack.cmd'
+            },
+            terminal: {
+                command: './test/cmd/setup.scpt'
             }
         },
 
@@ -546,6 +555,21 @@ module.exports = function (grunt) {
                     'protractor:chrome',
                     'protractor:firefox',
                     'protractor:ie'
+                ]
+            },
+            // e2e macintosh (desktop)
+            mac: {
+                tasks: [
+                    'protractor:chrome',
+                    'protractor:firefox',
+                    'protractor:safari'
+                ]
+            },
+            // e2e browserstack
+            browserstack: {
+                tasks: [
+                    'shell:browserstack',
+                    'protractor:browserstack'
                 ]
             }
         }

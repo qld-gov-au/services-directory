@@ -13,7 +13,7 @@ exports.config = {
     // Browserstack's selenium server address
     seleniumAddress: 'http://hub.browserstack.com/wd/hub',
 
-    seleniumArgs: ['-Dwebdriver.browserstack.driver=./node_modules/protractor/selenium/BrowserStackLocal r9cBSaXLmXf331LQsYAd localhost,9000,0'],
+    seleniumArgs: ['-Dwebdriver.browserstack.driver=./node_modules/browserstacklocal/win.exe r9cBSaXLmXf331LQsYAd localhost,9000,0'],
 
     // Pattern for finding test spec files
     specs: [

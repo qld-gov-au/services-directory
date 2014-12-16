@@ -60,11 +60,11 @@ module.exports = function (grunt) {
             update: {
                 command: 'node ./node_modules/protractor/bin/webdriver-manager update'
             },
+            update_ie: {
+                command: './node_modules/.bin/webdriver-manager update --ie'
+            },
             webdriver: {
                 command: './node_modules/.bin/webdriver-manager start'
-            },
-            webdriver_ie: {
-                command: './node_modules/.bin/webdriver-manager update --ie'
             },
             protractor: {
                 command: './node_modules/.bin/protractor ./test/protractor.conf.js'
@@ -470,31 +470,39 @@ module.exports = function (grunt) {
             }
         },
 
-        // Webdriver tasks
-        webdriver: {
-            options: {
-                desiredCapabilities: {
-                    browserName: 'chrome'
-                }
+        // Build multi-tasks
+        build: {
+            dev: {
+                tasks: [
+                    'clean:build',
+                    'copy:build',
+                    'copy:app',
+                    'ssi:build',
+                    'jshint:app',
+                    'uglify:app',
+                    'concat:app',
+                    'copy:styles',
+                    'autoprefixer'
+                ]
             },
-            local: {
-                tests: ['test/spec/local.js']
-            },
-            test: {
-                tests: ['test/spec/github.js']
-            },
-            login: {
-                tests: ['test/spec/*.js'],
-                options: {
-                    // overwrite default settings
-                    desiredCapabilities: {
-                        browserName: 'firefox'
-                    }
-                }
+            dist: {
+                tasks: [
+                    'clean:build',
+                    'copy:build',
+                    'copy:app',
+                    'uglify:build',
+                    'concat:build',
+                    'copy:styles',
+                    'autoprefixer'
+                ]
             }
         }
     });
 
+    // Register multi-tasks
+    grunt.registerMultiTask('build', 'Build tasks', function() {
+        grunt.task.run( this.data.tasks );
+    });
 
     grunt.registerTask('serve', 'start the server and preview your app, --allow-remote for remote access', function (target) {
         if (grunt.option('allow-remote')) {
@@ -505,7 +513,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
-            'dev',
+            'build:dev',
             'connect:livereload',
             'watch'
         ]);
@@ -516,55 +524,14 @@ module.exports = function (grunt) {
         grunt.task.run([target ? ('serve:' + target) : 'serve']);
     });
 
-    grunt.registerTask('test', function (target) {
-//        if (target !== 'watch') {
-//            grunt.task.run([
-//                'clean:build'
-//            ]);
-//        }
-
+    grunt.registerTask('test', function () {
         grunt.task.run([
-            'connect:test',
-            'webdriver:test'
+            'build:dev',
+            'connect:test'
         ]);
     });
 
-//    grunt.registerTask('test', function (target) {
-//        if (target !== 'watch') {
-//            grunt.task.run([
-//                'clean:build'
-//            ]);
-//        }
-//
-//        grunt.task.run([
-//            'connect:test',
-//            'mocha'
-//        ]);
-//    });
-
-    grunt.registerTask('dev', [
-        'clean:build',
-        'copy:build',
-        'copy:app',
-        'ssi:build',
-        'jshint:app',
-        'uglify:app',
-        'concat:app',
-        'copy:styles',
-        'autoprefixer'
-    ]);
-
-    grunt.registerTask('build', [
-        'clean:build',
-        'copy:build',
-        'copy:app',
-        'uglify:build',
-        'concat:build',
-        'copy:styles',
-        'autoprefixer'
-    ]);
-
     grunt.registerTask('default', [
-        'build'
+        'build:dist'
     ]);
 };

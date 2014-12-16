@@ -4,6 +4,7 @@
   "description": "Single-page application for services directory page (Do It Online)",
   "main": "Gruntfile.js",
   "scripts": {
+    "install": "node ./node_modules/protractor/bin/webdriver-manager update",
     "postinstall": "bower install"
   },
   "repository": {
@@ -38,5 +39,7 @@
     "load-grunt-tasks": "^1.0.0",
     "time-grunt": "^1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "protractor": "^1.5.0"
+  }
 }

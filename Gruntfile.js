@@ -52,25 +52,6 @@ module.exports = function (grunt) {
             build: '/*! For production - <%= pkg.name %>.js - Version <%= pkg.version %> <%= grunt.template.today("yyyymmdd") %>T<%= grunt.template.today("HHMM") %> */\n'
         },
 
-        // Shell tasks
-        shell: {
-            options: {
-                stdout: true
-            },
-            update: {
-                command: 'node ./node_modules/protractor/bin/webdriver-manager update'
-            },
-            update_ie: {
-                command: './node_modules/.bin/webdriver-manager update --ie'
-            },
-            webdriver: {
-                command: './node_modules/.bin/webdriver-manager start'
-            },
-            protractor: {
-                command: './node_modules/.bin/protractor ./test/protractor.conf.js'
-            }
-        },
-
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             options: {
@@ -470,6 +451,65 @@ module.exports = function (grunt) {
             }
         },
 
+        // Shell tasks
+        shell: {
+            options: {
+                stdout: true
+            },
+            update: {
+                command: 'node ./node_modules/protractor/bin/webdriver-manager update'
+            },
+            update_ie: {
+                command: './node_modules/.bin/webdriver-manager update --ie'
+            },
+            webdriver: {
+                command: './node_modules/.bin/webdriver-manager start'
+            },
+            protractor: {
+                command: './node_modules/.bin/protractor ./test/spec/protractor.conf.js'
+            },
+            browserstack: {
+                command: './node_modules/protractor/selenium/BrowserStackLocal r9cBSaXLmXf331LQsYAd localhost,9000,0'
+            }
+        },
+
+        // Protractor tasks
+        protractor: {
+            options: {
+                configFile: './test/spec/protractor.conf.js', //your protractor config file
+                keepAlive: true, // If false, the grunt process stops when the test fails.
+                noColor: false, // If true, protractor will not use colors in its output.
+                args: {
+                    // Arguments passed to the command
+                }
+            },
+            chrome: {
+                options: {
+                    configFile: './test/spec/protractor.conf.chrome.js'
+                }
+            },
+            firefox: {
+                options: {
+                    configFile: './test/spec/protractor.conf.firefox.js'
+                }
+            },
+            safari: {
+                options: {
+                    configFile: './test/spec/protractor.conf.safari.js'
+                }
+            },
+            ie: {
+                options: {
+                    configFile: './test/spec/protractor.conf.ie.js'
+                }
+            },
+            browserstack: {
+                options: {
+                    configFile: './test/spec/protractor.conf.browserstack.js'
+                }
+            }
+        },
+
         // Build multi-tasks
         build: {
             dev: {
@@ -496,11 +536,27 @@ module.exports = function (grunt) {
                     'autoprefixer'
                 ]
             }
+        },
+
+        // Testing tasks
+        testing: {
+            // e2e windows (desktop)
+            win: {
+                tasks: [
+                    'protractor:chrome',
+                    'protractor:firefox',
+                    'protractor:ie'
+                ]
+            }
         }
     });
 
     // Register multi-tasks
     grunt.registerMultiTask('build', 'Build tasks', function() {
+        grunt.task.run( this.data.tasks );
+    });
+
+    grunt.registerMultiTask('testing', 'Testing tasks', function() {
         grunt.task.run( this.data.tasks );
     });
 

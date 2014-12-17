@@ -2,7 +2,7 @@
 
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
-Single-page application for services directory page.
+Single-page application for services directory page (Do it online). This page
 
 ## Development
 

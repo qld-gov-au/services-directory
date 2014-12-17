@@ -488,7 +488,7 @@ module.exports = function (grunt) {
             // e2e browserstack
             browserstack: {
                 tasks: [
-                    'shell:browserstack',
+                    //'shell:browserstack',
                     'protractor:browserstack'
                 ]
             }
@@ -563,6 +563,11 @@ module.exports = function (grunt) {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         grunt.task.run([target ? ('serve:' + target) : 'serve']);
     });
+
+    grunt.registerTask('webdriver', [
+        'shell:update',
+        'shell:update_ie'
+    ]);
 
     grunt.registerTask('default', [
         'build:dist'

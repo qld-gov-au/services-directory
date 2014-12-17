@@ -27,13 +27,17 @@ Once you are happy with the application and want to deploy some development file
 
 To build files for production, run the ```grunt build:dist``` task. This will compile and minify the files so you can deploy them to a production server.
 
-## Testing
+## Testing with Protractor
 
 To date, only end-to-end testing has been added to the build. This is conducted with Webdriver and Protractor and is based on the principles of Behaviour-Driven Development and Test-Driven Development. You can read more about that in this article, [Testing Your JavaScript with Jasmine](http://code.tutsplus.com/tutorials/testing-your-javascript-with-jasmine--net-21229). The syntax for Webdriver is very similar to Jasmine, so it is worth doing some further investigation into the concepts and methods for this framework.
 
 Before you start writing and executing exceptions for tests, you need to run the ```grunt webdriver``` task. This will update the binaries required to run Webdriver in your repo. If you ever clone a new repo, you will have to repeat this step.
 
 To get started with your development and testing in parallel, in Finder (OSX) or Explorer (Win) navigate to your repo and into the ```cmd``` folder. Then, double-click the ```testing.scpt``` (OSX) or ```testing.cmd``` (Win) file.
+
+Running can be done by running ```grunt testing:mac``` (OSX) or ```grunt testing:win``` (Win). If you want to use BrowserStack, simply run ``` grunt testing:browserstack```. This can have issues with timeouts, etc so just keep trying until the connection is stable and all the tests pass.
+
+To edit or create tests, add or update files under the ```test/e2e``` folder.
 
 ## Additional info
 

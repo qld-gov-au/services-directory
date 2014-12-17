@@ -13,6 +13,7 @@ This project assumes that you have node.js installed and the Bower along with th
 Navigate to your repo in the Command Prompt or Terminal and run the ```npm install``` command. This will download all the necessary npm modules and then follow with downloading the bower components.
 
 Then, in Finder (OSX) or Explorer (Win) navigate to your repo and into the ```cmd``` folder. Then, double-click the ```developmet.scpt``` (OSX) or ```developmet.cmd``` (Win) file. This will open up a command line interface and kick-off the server where you will do most of your development.
+
 This server will do an automatic refresh in your default browser if all the linting checks pass. It is a very handy way to develop apps. Alternatively, you can just run the ```grunt serve``` command and it will also start up the server for development.
 
 ## Development

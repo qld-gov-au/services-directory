@@ -36,5 +36,9 @@
     "load-grunt-tasks": "^1.0.0",
     "time-grunt": "^1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "browserstacklocal": "0.0.4",
+    "grunt-protractor-runner": "^1.1.4",
+    "protractor": "^1.5.0"
+  }
 }

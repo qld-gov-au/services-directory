@@ -1,2 +1,2 @@
 start cmd.exe @cmd /k "grunt serve"
-start cmd.exe @cmd /k
+cd .. && start cmd.exe @cmd /k

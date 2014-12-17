@@ -33,7 +33,12 @@ To date, only end-to-end testing has been added to the build. This is conducted 
 
 To get started with your development and testing in parallel, in Finder (OSX) or Explorer (Win) navigate to your repo and into the ```cmd``` folder. Then, double-click the ```testing.scpt``` (OSX) or ```testing.cmd``` (Win) file.
 
+## Additional info
 
+You may want to update your npm modules at some stage. To do so, use the following steps in the command line interface:
 
+1. ```npm install -g npm-check-updates```
+2. ```npm-check-updates -u```
+3. ```npm install```
 
-
+This will ensure you are using the most up-to-date versions.

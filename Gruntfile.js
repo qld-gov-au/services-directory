@@ -472,13 +472,10 @@ module.exports = function (grunt) {
                 command: './node_modules/browserstacklocal/win.exe r9cBSaXLmXf331LQsYAd localhost,9000,0'
             },
             command: {
-                command: './test/cmd/setup.cmd'
-            },
-            command_browserstack: {
-                command: './test/cmd/browserstack.cmd'
+                command: './cmd/setup.cmd'
             },
             terminal: {
-                command: './test/cmd/setup.scpt'
+                command: './cmd/setup.scpt'
             }
         },
 

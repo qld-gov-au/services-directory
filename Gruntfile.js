@@ -91,7 +91,8 @@ module.exports = function (grunt) {
                 options: {
                     livereload: '<%= connect.options.livereload %>',
                     interval: 10014
-                }
+                },
+                files: []
             }
         },
 
@@ -415,6 +416,18 @@ module.exports = function (grunt) {
                     'copy:styles',
                     'autoprefixer'
                 ]
+            },
+            stage: {
+              tasks: [
+                  'clean:build',
+                  'copy:build',
+                  'copy:app',
+                  'jshint:app',
+                  'uglify:app',
+                  'concat:app',
+                  'copy:styles',
+                  'autoprefixer'
+              ]
             },
             dist: {
                 tasks: [

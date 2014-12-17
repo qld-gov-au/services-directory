@@ -401,25 +401,6 @@ module.exports = function (grunt) {
             }
         },
 
-        // Shell tasks
-        /*shell: {
-            options: {
-                stdout: true
-            },
-            update: {
-                command: 'node ./node_modules/protractor/bin/webdriver-manager update'
-            },
-            webdriver: {
-                command: './node_modules/.bin/webdriver-manager start'
-            },
-            webdriver_ie: {
-                command: './node_modules/.bin/webdriver-manager update --ie'
-            },
-            protractor: {
-                command: './node_modules/.bin/protractor ./test/protractor.conf.js'
-            }
-        },*/
-
         // Build multi-tasks
         build: {
             dev: {
@@ -449,6 +430,11 @@ module.exports = function (grunt) {
         }
     });
 
+    // Register multi-tasks
+    grunt.registerMultiTask('build', 'Build tasks', function () {
+        grunt.task.run(this.data.tasks);
+    });
+
 
     grunt.registerTask('serve', 'start the server and preview your app, --allow-remote for remote access', function (target) {
         if (grunt.option('allow-remote')) {
@@ -459,7 +445,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
-            'dev',
+            'build:dev',
             'connect:livereload',
             'watch'
         ]);
@@ -470,29 +456,7 @@ module.exports = function (grunt) {
         grunt.task.run([target ? ('serve:' + target) : 'serve']);
     });
 
-    grunt.registerTask('dev', [
-        'clean:build',
-        'copy:build',
-        'copy:app',
-        'ssi:build',
-        'jshint:app',
-        'uglify:app',
-        'concat:app',
-        'copy:styles',
-        'autoprefixer'
-    ]);
-
-    grunt.registerTask('build', [
-        'clean:build',
-        'copy:build',
-        'copy:app',
-        'uglify:build',
-        'concat:build',
-        'copy:styles',
-        'autoprefixer'
-    ]);
-
     grunt.registerTask('default', [
-        'build'
+        'build:dist'
     ]);
 };

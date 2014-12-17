@@ -2,7 +2,7 @@
 
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
-Single-page application for services directory page (Do it online). This page
+Single-page application for services directory page (Do it online). This page is used on [Do it online](http://www.qld.gov.au/services/) page and in service centre kiosks. So, it is important to keep this in mind when testing and developing.
 
 ## Requirements
 

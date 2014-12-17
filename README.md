@@ -12,7 +12,7 @@ This project assumes that you have node.js installed and the Bower along with th
 
 Navigate to your repo in the Command Prompt or Terminal and run the ```npm install``` command. This will download all the necessary npm modules and then follow with downloading the bower components.
 
-Then, in Finder (OSX) or Explorer (Win) navigate to your repo and double-click the ```setup.scpt``` (OSX) or ```setup.cmd``` (Win) file. This will open up a command line interface and kick-off the server where you will do most of your development.
+Then, in Finder (OSX) or Explorer (Win) navigate to your repo and double-click the ```server.scpt``` (OSX) or ```server.cmd``` (Win) file. This will open up a command line interface and kick-off the server where you will do most of your development.
 This server will do an automatic refresh in your default browser if all the linting checks pass. It is a very handy way to develop apps. Alternatively, you can just run the ```grunt serve``` command and it will also start up the server for development.
 
 ## Development
@@ -27,7 +27,7 @@ To build files for production, run the ```grunt build:dist``` task. This will co
 
 ## Testing
 
-Install the Webdriver Manager:
+Only end-to-end testing has been added to the build. This is conducted with Webdriver and Protractor and is based on the principles of Behaviour-Driven Development and Test-Driven Development. You can read more about that in this article, [Testing Your JavaScript with Jasmine](http://code.tutsplus.com/tutorials/testing-your-javascript-with-jasmine--net-21229). The syntax for Webdriver is very similar to Jasmine, so it is worth doing some further investigation into the concepts and methods for this framework.
 
 ```npm install```
 

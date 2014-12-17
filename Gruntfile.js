@@ -52,25 +52,6 @@ module.exports = function (grunt) {
             build: '/*! For production - <%= pkg.name %>.js - Version <%= pkg.version %> <%= grunt.template.today("yyyymmdd") %>T<%= grunt.template.today("HHMM") %> */\n'
         },
 
-        // Shell tasks
-        shell: {
-            options: {
-                stdout: true
-            },
-            update: {
-                command: 'node ./node_modules/protractor/bin/webdriver-manager update'
-            },
-            webdriver: {
-                command: './node_modules/.bin/webdriver-manager start'
-            },
-            webdriver_ie: {
-                command: './node_modules/.bin/webdriver-manager update --ie'
-            },
-            protractor: {
-                command: './node_modules/.bin/protractor ./test/protractor.conf.js'
-            }
-        },
-
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             options: {
@@ -89,10 +70,6 @@ module.exports = function (grunt) {
                 options: {
                     livereload: true
                 }
-            },
-            jstest: {
-                files: ['test/spec/{,*/}*.js'],
-                tasks: ['test:watch']
             },
             sass: {
                 files: ['<%= config.app %>/assets/sass/{,*/}*.{scss,sass}'],
@@ -114,17 +91,7 @@ module.exports = function (grunt) {
                 options: {
                     livereload: '<%= connect.options.livereload %>',
                     interval: 10014
-                },
-                files: [
-                    // build files
-//                    '<%= config.dist %>/{,*/}*.html',
-//                    '<%= config.dist %>/<%= config.directory %>/assets/{,*/}*.css',
-//                    '<%= config.dist %>/assets/script/apps/*.js',
-//                    // swe files
-//                    '<%= config.dist %>/assets/images/{,*/}*',
-//                    '<%= config.dist %>/assets/includes/{,*/}*',
-//                    '<%= config.dist %>/assets/{,*/}{,*/}{,*/}*'
-                ]
+                }
             }
         },
 
@@ -200,18 +167,6 @@ module.exports = function (grunt) {
                         target: 'http://localhost:9000/<%= config.directory %>' // target url to open
                     }
                 }
-            },
-            test: {
-                options: {
-                    open: false,
-                    port: 9001,
-                    middleware: function (connect) {
-                        return [
-                            connect.static('test'),
-                            connect.static(config.dist)
-                        ];
-                    }
-                }
             }
         },
 
@@ -244,16 +199,6 @@ module.exports = function (grunt) {
             }
         },
 
-        // Mocha testing framework configuration options
-        mocha: {
-            all: {
-                options: {
-                    run: true,
-                    urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
-                }
-            }
-        },
-
         // Compiles Sass to CSS and generates necessary files if requested
         sass: {
             options: {
@@ -278,20 +223,6 @@ module.exports = function (grunt) {
                         src: ['*.{scss,sass}'],
                         dest: '.tmp/styles',
                         ext: '.css'
-                    }
-                ]
-            }
-        },
-
-        // The following *-min tasks produce minified files in the dist folder
-        imagemin: {
-            build: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%= config.app %>/images',
-                        src: '{,*/}*.{gif,jpeg,jpg,png}',
-                        dest: '<%= config.dist %>/images'
                     }
                 ]
             }
@@ -470,27 +401,50 @@ module.exports = function (grunt) {
             }
         },
 
-        // Webdriver tasks
-        webdriver: {
+        // Shell tasks
+        /*shell: {
             options: {
-                desiredCapabilities: {
-                    browserName: 'chrome'
-                }
+                stdout: true
             },
-            local: {
-                tests: ['test/spec/local.js']
+            update: {
+                command: 'node ./node_modules/protractor/bin/webdriver-manager update'
             },
-            test: {
-                tests: ['test/spec/github.js']
+            webdriver: {
+                command: './node_modules/.bin/webdriver-manager start'
             },
-            login: {
-                tests: ['test/spec/*.js'],
-                options: {
-                    // overwrite default settings
-                    desiredCapabilities: {
-                        browserName: 'firefox'
-                    }
-                }
+            webdriver_ie: {
+                command: './node_modules/.bin/webdriver-manager update --ie'
+            },
+            protractor: {
+                command: './node_modules/.bin/protractor ./test/protractor.conf.js'
+            }
+        },*/
+
+        // Build multi-tasks
+        build: {
+            dev: {
+                tasks: [
+                    'clean:build',
+                    'copy:build',
+                    'copy:app',
+                    'ssi:build',
+                    'jshint:app',
+                    'uglify:app',
+                    'concat:app',
+                    'copy:styles',
+                    'autoprefixer'
+                ]
+            },
+            dist: {
+                tasks: [
+                    'clean:build',
+                    'copy:build',
+                    'copy:app',
+                    'uglify:build',
+                    'concat:build',
+                    'copy:styles',
+                    'autoprefixer'
+                ]
             }
         }
     });
@@ -515,32 +469,6 @@ module.exports = function (grunt) {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         grunt.task.run([target ? ('serve:' + target) : 'serve']);
     });
-
-    grunt.registerTask('test', function (target) {
-//        if (target !== 'watch') {
-//            grunt.task.run([
-//                'clean:build'
-//            ]);
-//        }
-
-        grunt.task.run([
-            'connect:test',
-            'webdriver:test'
-        ]);
-    });
-
-//    grunt.registerTask('test', function (target) {
-//        if (target !== 'watch') {
-//            grunt.task.run([
-//                'clean:build'
-//            ]);
-//        }
-//
-//        grunt.task.run([
-//            'connect:test',
-//            'mocha'
-//        ]);
-//    });
 
     grunt.registerTask('dev', [
         'clean:build',

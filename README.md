@@ -31,6 +31,8 @@ To build files for production, run the ```grunt build:dist``` task. This will co
 
 To date, only end-to-end testing has been added to the build. This is conducted with Webdriver and Protractor and is based on the principles of Behaviour-Driven Development and Test-Driven Development. You can read more about that in this article, [Testing Your JavaScript with Jasmine](http://code.tutsplus.com/tutorials/testing-your-javascript-with-jasmine--net-21229). The syntax for Webdriver is very similar to Jasmine, so it is worth doing some further investigation into the concepts and methods for this framework.
 
+Before you start writing and executing exceptions for tests, you need to run the ```grunt webdriver``` task. This will update the binaries required to run Webdriver in your repo. If you ever clone a new repo, you will have to repeat this step.
+
 To get started with your development and testing in parallel, in Finder (OSX) or Explorer (Win) navigate to your repo and into the ```cmd``` folder. Then, double-click the ```testing.scpt``` (OSX) or ```testing.cmd``` (Win) file.
 
 ## Additional info

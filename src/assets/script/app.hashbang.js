@@ -26,8 +26,10 @@ qg.swe.services = (function ( $, swe, _dl ) {
             slug: 'transport-and-motoring'
         },
         resource: {
-            id: 'c361766e-f9d4-490a-817d-5effbdd97ba5',
-            url: 'staging.data.qld.gov.au'
+//            id: 'c361766e-f9d4-490a-817d-5effbdd97ba5',
+//            url: 'staging.data.qld.gov.au'
+            id: '384429ae-fd27-4448-afe6-e4ecb8d1ad93',
+            url: 'data.qld.gov.au'
         }
     };
 

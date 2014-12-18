@@ -453,7 +453,9 @@ qg.swe.services = (function ( $, swe, _dl ) {
                 if ( !!query ) {
                     // loop through each and set form value
                     var values = {};
-                    query.split( '&' ).map(function ( item ) {
+                    var split = query.split( '&' );
+                    console.log(query, split);
+                    split.map(function ( item ) {
                         var id = item.split( '=' ).shift();
                         values[ id ] = item.split( '=' ).pop();
                     });

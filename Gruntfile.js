@@ -327,7 +327,7 @@ module.exports = function (grunt) {
                         src: [
                             '{,*/}*.html',
                             'assets/images/**/*.*',
-                            'assets/includes/**/*.*',
+                            '!assets/includes/**/*.*',
                             '!assets/includes/templates/**/*.*',
                             '!_bak/**'
                         ]

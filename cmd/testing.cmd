@@ -1,4 +1,5 @@
 #start cmd.exe @cmd /k "grunt serve"
+cd ..
 start cmd.exe @cmd /k "grunt shell:webdriver"
 start cmd.exe @cmd /k "grunt shell:browserstack"
-cd .. && start cmd.exe @cmd /k
+start cmd.exe @cmd /k

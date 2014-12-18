@@ -88,81 +88,14 @@ qg.swe.services = (function ( $, swe, _dl ) {
             this.event.submit();
             this.event.reset();
             this.get.types();
-            this.get.route();
+//            this.get.route();
             this.get.query();
             this.set.toggle();
 
             // empty
             app.empty();
 
-            // routes
-            routie({
-                '/': function () {
-                    //console.log( 'Route: root' );
-                    app.empty();
-                    app.set.form();
-                    app.set.location();
-                    app.set.route();
-                    app.set.params( app.props.location );
-                    app.set.kiosk( app.props.location );
-                    app.get.query();
-                    app.get.page();
-                    app.data.online();
-                    app.data.offline();
-                    app.data.widget( args.category.slug );
-                    // dataLayer push
-//                    _dl.push({
-//                        'event': 'VirtualPageview',
-//                        'virtualPageURL': app.props.page,
-//                        'virtualPageTitle': locations[ app.props.location ].title
-//                    });
-                },
-                '/:query': function ( value ) {
-                    //console.log( 'Route: query' );
-                    app.empty();
-                    app.set.form( value );
-                    app.set.location();
-                    app.set.route();
-                    app.set.params( app.props.location );
-                    app.set.kiosk( app.props.location );
-                    app.get.query();
-                    app.get.page();
-                    app.data.online();
-                    app.data.offline();
-                    app.data.widget( args.category.slug );
-                    // dataLayer push
-//                    _dl.push({
-//                        'event': 'VirtualPageview',
-//                        'virtualPageURL': app.props.page,
-//                        'virtualPageTitle': locations[ app.props.location ].title
-//                    });
-                },
-                '/location/:name': function ( value ) {
-                    //console.log( 'Route: location' );
-                    app.empty();
-                    app.set.form( value );
-                    app.set.location( value );
-                    app.set.route( '/location/' + value );
-                    app.set.params( app.props.location );
-                    app.set.kiosk( app.props.location );
-                    app.get.query();
-                    app.get.page();
-                    if ( !!app.props.params ) {
-                        app.data.online();
-                        app.data.offline();
-                        app.data.widget( args.category.slug );
-                    }
-                    // dataLayer push
-//                    _dl.push({
-//                        'event': 'VirtualPageview',
-//                        'virtualPageURL': app.props.page,
-//                        'virtualPageTitle': locations[ app.props.location ].title
-//                    });
-                }
-            });
-
-            // run route
-            routie( app.props.route + ( !!app.props.query ? ( '?' + app.props.query ) : '' ) );
+            console.log(this.props);
         },
         empty: function () {
             $list.empty();
@@ -353,7 +286,8 @@ qg.swe.services = (function ( $, swe, _dl ) {
                 app.props.types = list;
             },
             query: function () {
-                if ( !!window.location.hash && window.location.hash.contains( '?' ) ) {
+                console.log(window.location);
+                if ( window.location.contains( '?' ) ) {
                     app.props.query = window.location.hash.split( '?' ).pop();
                 } else {
                     app.props.query = null;

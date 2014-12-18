@@ -80,7 +80,7 @@ module.exports = function (grunt) {
                 tasks: ['newer:copy:styles', 'autoprefixer']
             },
             html: {
-                files: ['<%= config.app %>/{,*/}{,*/}{,*/}*.html'],
+                files: ['<%= config.app %>/{,*/}{,*/}{,*/}*.{html,txt}'],
                 tasks: ['newer:copy:html', 'ssi:build']
             },
             swe: {
@@ -328,6 +328,7 @@ module.exports = function (grunt) {
                         cwd: '<%= config.app %>',
                         dest: '<%= config.dist %>/<%= config.directory %>',
                         src: [
+                            '{,*/}*.txt',
                             '{,*/}*.html',
                             'assets/images/**/*.*',
                             '!assets/includes/**/*.*',
@@ -355,7 +356,8 @@ module.exports = function (grunt) {
                         cwd: '<%= config.app %>',
                         dest: '<%= config.dist %>/<%= config.directory %>',
                         src: [
-                            '*.html',
+                            '{,*/}*.txt',
+                            '{,*/}*.html',
                             '!_bak/**'
                         ]
                     },

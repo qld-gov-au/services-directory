@@ -109,7 +109,10 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: 'build/<%= config.directory %>',
-                        src: ['*.html'],
+                        src: [
+                            '*.html',
+                            'kiosk/*.html'
+                        ],
                         dest: 'build/<%= config.directory %>'
                     }
                 ]

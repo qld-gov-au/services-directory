@@ -338,8 +338,7 @@ module.exports = function (grunt) {
                         cwd: '<%= config.app %>/assets',
                         dest: '<%= config.dist %>/assets/<%= config.directory %>',
                         src: [
-                            'includes/templates/{,*/}*.html',
-                            'style/{,*/}*.css',
+                            'includes/{,*/}*.html',
                             '!_bak/**'
                         ]
                     }
@@ -363,7 +362,7 @@ module.exports = function (grunt) {
                         cwd: '<%= config.app %>/assets',
                         dest: '<%= config.dist %>/assets/<%= config.directory %>',
                         src: [
-                            'includes/templates/{,*/}*.html',
+                            'includes/{,*/}*.html',
                             '!_bak/**'
                         ]
                     }

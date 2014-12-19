@@ -67,7 +67,7 @@ module.exports = function (grunt) {
                     'assets.json',
                     '<%= config.app %>/assets/script/{,*/}*.js'
                 ],
-                tasks: ['jshint:app', 'uglify:app', 'concat:app' ],
+                tasks: ['jshint:app', 'uglify:app', 'concat:app'],
                 options: {
                     livereload: true
                 }
@@ -93,7 +93,11 @@ module.exports = function (grunt) {
                     livereload: '<%= connect.options.livereload %>',
                     interval: 10014
                 },
-                files: []
+                files: [
+                    '<%= config.dist %>/<%= config.directory %>/{,*/}{,*/}{,*/}*.{html,txt}',
+                    '<%= config.dist %>/assets/<%= config.directory %>/{,*/}{,*/}{,*/}*.*',
+                    '<%= config.dist %>/assets/script/{,*/}{,*/}{,*/}*.js'
+                ]
             }
         },
 

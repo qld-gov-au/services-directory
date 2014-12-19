@@ -23,6 +23,7 @@ module.exports = function (grunt) {
         assets: 'assets/v2',
         swe: '../swe_template/build/_htdocs/assets',
         directory: 'services',
+        localhost: 'localhost', //'192.168.56.1',
         interval: 5007
     };
 
@@ -127,7 +128,7 @@ module.exports = function (grunt) {
                 open: true,
                 livereload: 35729,
                 // Change this to '0.0.0.0' to access the server from outside
-                hostname: 'localhost',
+                hostname: '<%= config.localhost %>',
                 middleware: function (connect, options, middlewares) {
                     // clean up our output
                     options = options || {};
@@ -168,7 +169,7 @@ module.exports = function (grunt) {
             livereload: {
                 options: {
                     open: {
-                        target: 'http://localhost:9000/<%= config.directory %>' // target url to open
+                        target: 'http://<%= config.localhost %>:9000/<%= config.directory %>' // target url to open
                     }
                 }
             }
@@ -424,7 +425,7 @@ module.exports = function (grunt) {
                 command: './node_modules/.bin/protractor ./test/spec/protractor.conf.js'
             },
             browserstack: {
-                command: './node_modules/browserstacklocal/win.exe r9cBSaXLmXf331LQsYAd localhost,9000,0'
+                command: './node_modules/browserstacklocal/win.exe r9cBSaXLmXf331LQsYAd <%= config.localhost %>,9000,0'
             },
             command: {
                 command: './cmd/setup.cmd'

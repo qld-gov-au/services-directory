@@ -454,11 +454,14 @@ qg.swe.services = (function ( $, swe, _dl ) {
                     // loop through each and set form value
                     var values = {};
                     var split = query.split( '&' );
-                    console.log(query, split);
-                    split.map(function ( item ) {
+                    $.each( split, function(index, item) {
                         var id = item.split( '=' ).shift();
                         values[ id ] = item.split( '=' ).pop();
                     });
+                    // split.map(function ( item ) {
+                    //     var id = item.split( '=' ).shift();
+                    //     values[ id ] = item.split( '=' ).pop();
+                    // });
                     $form.find( '.form-section' ).find( 'input, select' ).each(function () {
                         var id = $( this ).attr( 'id' );
                         if ( values.hasOwnProperty( id ) ) {

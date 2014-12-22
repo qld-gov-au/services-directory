@@ -486,6 +486,19 @@ module.exports = function (grunt) {
             }
         },
 
+        // Karma tasks
+        karma: {
+            unit: {
+                configFile: 'test/spec/karma.conf.js',
+                singleRun: true
+            }
+//            unit: {
+//                configFile: 'karma.conf.js',
+//                singleRun: continuousIntegrationMode,
+//                reporters: continuousIntegrationMode ? ['teamcity'] : ['progress']
+//            }
+        },
+
         // Testing tasks
         testing: {
             // e2e windows (desktop)

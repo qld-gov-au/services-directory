@@ -37,8 +37,13 @@
   },
   "devDependencies": {
     "browserstacklocal": "0.0.4",
+    "grunt-karma": "^0.9.0",
     "grunt-protractor-runner": "^1.1.4",
     "grunt-shell-spawn": "^0.3.0",
+    "jasmine-core": "^2.1.3",
+    "karma": "^0.12.28",
+    "karma-jasmine": "^0.3.2",
+    "karma-phantomjs-launcher": "^0.1.4",
     "protractor": "^1.5.0"
   }
 }

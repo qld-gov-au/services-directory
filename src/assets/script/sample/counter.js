@@ -1,6 +1,7 @@
-﻿'use strict';
+﻿/* jshint unused:false */
 
 var counter = (function () {
+    'use strict';
 
     var add = function(num1, num2) {
         return num1 + num2;

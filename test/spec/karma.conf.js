@@ -1,4 +1,5 @@
 // Karma configuration
+// https://github.com/kwilson/karma-through-grunt
 
 module.exports = function (config) {
     'use strict';
@@ -48,6 +49,8 @@ module.exports = function (config) {
         // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
         browsers: [
             'Chrome',
+            'Firefox',
+            'IE',
             'PhantomJS'
         ],
 
@@ -57,6 +60,8 @@ module.exports = function (config) {
         // Which plugins to enable
         plugins: [
             'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-ie-launcher',
             'karma-phantomjs-launcher',
             'karma-jasmine'
         ],

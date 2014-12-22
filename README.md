@@ -9,6 +9,12 @@ Single-page application for services directory page (Do it online). This page is
 
 This project assumes that you have node.js installed and the Bower along with the Grunt.js CLI also installed. For more information about these two requirements, visit [Getting started](http://gruntjs.com/getting-started).
 
+### Troubleshooting
+
+If you encounter any errors in setting up node, grunt or bower, try the following:
+Uninstall node.js and reinstall with the [latest version] (http://nodejs.org/).
+Run through the getting Grunt [Getting started](http://gruntjs.com/getting-started) guide again.
+
 ## Getting started
 
 Navigate to your repo in the Command Prompt or Terminal and run the ```npm install``` command. This will download all the necessary npm modules and then follow with downloading the bower components.
@@ -35,7 +41,7 @@ Before you start writing and executing exceptions for tests, you need to run the
 
 To get started with your development and testing in parallel, in Finder (OSX) or Explorer (Win) navigate to your repo and into the ```cmd``` folder. Then, double-click the ```testing.scpt``` (OSX) or ```testing.cmd``` (Win) file.
 
-Running can be done by running ```grunt testing:mac``` (OSX) or ```grunt testing:win``` (Win). If you want to use BrowserStack, simply run ``` grunt testing:browserstack```. This can have issues with timeouts, etc so just keep trying until the connection is stable and all the tests pass.
+Running can be done by running ```grunt testing:mac``` (OSX) or ```grunt testing:win``` (Win). If you want to use BrowserStack, simply run ``` grunt testing:browserstack```. This can have issues with timeouts, etc so just keep trying until the connection is stable and all the tests pass. To ensure your tests pass, make sure you have run ```grunt serve``` in your development cmd window so your page has actually been compiled and rendered.
 
 To edit or create tests, add or update files under the ```test/e2e``` folder.
 

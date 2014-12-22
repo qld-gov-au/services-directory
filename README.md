@@ -9,6 +9,12 @@ Single-page application for services directory page (Do it online). This page is
 
 This project assumes that you have node.js installed and the Bower along with the Grunt.js CLI also installed. For more information about these two requirements, visit [Getting started](http://gruntjs.com/getting-started).
 
+### Troubleshooting
+
+If you encounter any errors in setting up node, grunt or bower, try the following:
+Uninstall node.js and reinstall with the [latest version] (http://nodejs.org/).
+Run through the getting Grunt [Getting started](http://gruntjs.com/getting-started) guide again.
+
 ## Getting started
 
 Navigate to your repo in the Command Prompt or Terminal and run the ```npm install``` command. This will download all the necessary npm modules and then follow with downloading the bower components.

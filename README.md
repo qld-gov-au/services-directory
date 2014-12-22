@@ -41,7 +41,7 @@ Before you start writing and executing exceptions for tests, you need to run the
 
 To get started with your development and testing in parallel, in Finder (OSX) or Explorer (Win) navigate to your repo and into the ```cmd``` folder. Then, double-click the ```testing.scpt``` (OSX) or ```testing.cmd``` (Win) file.
 
-Running can be done by running ```grunt testing:mac``` (OSX) or ```grunt testing:win``` (Win). If you want to use BrowserStack, simply run ``` grunt testing:browserstack```. This can have issues with timeouts, etc so just keep trying until the connection is stable and all the tests pass.
+Running can be done by running ```grunt testing:mac``` (OSX) or ```grunt testing:win``` (Win). If you want to use BrowserStack, simply run ``` grunt testing:browserstack```. This can have issues with timeouts, etc so just keep trying until the connection is stable and all the tests pass. To ensure your tests pass, make sure you have run ```grunt serve``` in your development cmd window so your page has actually been compiled and rendered.
 
 To edit or create tests, add or update files under the ```test/e2e``` folder.
 

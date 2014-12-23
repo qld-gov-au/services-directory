@@ -14,13 +14,14 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            '../src/assets/script/sample/**/*.js',
+            'bower_components/jquery/jquery.js',
+            '../src/assets/script/**/*.js',
 //            'test/mock/**/*.js',
             '../test/unit/**/*.js'
         ],
 
         // list of files / patterns to exclude
-        exclude: [],
+        exclude: ['../src/assets/script/backup/**/*.js'],
 
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
@@ -68,13 +69,13 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
-        singleRun: false
+        singleRun: false,
 
         // Uncomment the following lines if you are using grunt's server to run the tests
-        // proxies: {
-        //   '/': 'http://localhost:9000/'
-        // },
+        proxies: {
+           '/': 'http://localhost:9000/'
+        },
         // URL root prevent conflicts with the site root
-        // urlRoot: '_karma_'
+        urlRoot: '_karma_'
     });
 };

@@ -1,10 +1,7 @@
-/* globals jQuery, Placeholders, Handlebars, routie */
+/* globals jQuery, qg, Placeholders, Handlebars, routie, dataLayer */
 /* jshint unused:false, sub:true, expr:true */
 
-var qg = qg || {};
-    qg.swe = qg.swe || {};
-
-qg.swe.services = (function ( $, swe ) {
+qg.swe.services = (function ( $, swe, _dl ) {
     'use strict';
 
     // jquery objects
@@ -115,6 +112,12 @@ qg.swe.services = (function ( $, swe ) {
                     app.data.online();
                     app.data.offline();
                     app.data.widget( args.category.slug );
+                    // dataLayer push
+//                    _dl.push({
+//                        'event': 'VirtualPageview',
+//                        'virtualPageURL': app.props.page,
+//                        'virtualPageTitle': locations[ app.props.location ].title
+//                    });
                 },
                 '/:query': function ( value ) {
                     //console.log( 'Route: query' );
@@ -129,6 +132,12 @@ qg.swe.services = (function ( $, swe ) {
                     app.data.online();
                     app.data.offline();
                     app.data.widget( args.category.slug );
+                    // dataLayer push
+//                    _dl.push({
+//                        'event': 'VirtualPageview',
+//                        'virtualPageURL': app.props.page,
+//                        'virtualPageTitle': locations[ app.props.location ].title
+//                    });
                 },
                 '/location/:name': function ( value ) {
                     //console.log( 'Route: location' );
@@ -145,6 +154,12 @@ qg.swe.services = (function ( $, swe ) {
                         app.data.offline();
                         app.data.widget( args.category.slug );
                     }
+                    // dataLayer push
+//                    _dl.push({
+//                        'event': 'VirtualPageview',
+//                        'virtualPageURL': app.props.page,
+//                        'virtualPageTitle': locations[ app.props.location ].title
+//                    });
                 }
             });
 
@@ -273,8 +288,7 @@ qg.swe.services = (function ( $, swe ) {
                     query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' )' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 }
                 // run the data query method
-                // qg.data.get( args.resource.url, query, app.show.online );
-                app.get.data( args.resource.url, query, app.show.online );
+                qg.data.get( args.resource.url, query, app.show.online );
             },
             offline: function () {
                 var filter = app.get.filter(),
@@ -282,8 +296,7 @@ qg.swe.services = (function ( $, swe ) {
                     order = app.get.order(),
                     query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'no\' )' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 // run the data query method
-                // qg.data.get( args.resource.url, query, app.show.offline );
-                app.get.data( args.resource.url, query, app.show.offline );
+                //qg.data.get( args.resource.url, query, app.show.offline );
             },
             widget: function ( category ) {
                 // if the category is set, construct a filter OR get everything
@@ -293,53 +306,39 @@ qg.swe.services = (function ( $, swe ) {
                         order = app.get.order(),
                         query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"category-slug\"=\'' + category + '\' )' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                     // run the data query method
-                    // qg.data.get( args.resource.url, query, app.show.widget );
-                    // app.get.data( args.resource.url, query, app.show.widget );
+                    //qg.data.get( args.resource.url, query, app.show.widget );
                 }
             }
         },
+//        virtual: {
+//            push: function () {
+//                app.virtual.check();
+//                _dl.push({
+//                    'event': 'VirtualPageview',
+//                    'virtualPageURL': app.props.page,
+//                    'virtualPageTitle': locations[ app.props.location ].title
+//                });
+//                app.virtual.check();
+//                console.log( _dl );
+//            },
+//            remove: function () {
+//
+//            },
+//            check: function () {
+//                $.each(  _dl, function( key, item ) {
+//                    console.log( key, item );
+//                    if ( item.event === 'VirtualPageview' ) {
+//                        delete _dl[ key ];
+//                    }
+//                });
+//            }
+//        },
         check: {
             location: function ( value ) {
                 return locations.hasOwnProperty( value );
             }
         },
         get: {
-            data: function ( domain, query, options ) {
-                // set options
-                if ( $.isFunction( options )) {
-                    options = {
-                        successCallback: options,
-                        cache: false
-                    };
-                } else {
-                    options = $.extend({ cache: false }, options );
-                }
-                // set error callback
-                var errorCallback = function() {
-                    $( document ).status( 'show', {
-                        status: 'fail',
-                        lightbox: true,
-                        title: 'Error loading data',
-                        body: '<p>We were unable to retrieve data.</p><p>Please try again later.</p>'
-                    });
-                };
-                // ajax call
-                $.ajax({
-                    type: 'GET',
-                    data: { sql: query },
-                    url: 'https://' + domain + '/api/action/datastore_search_sql',
-                    contentType: 'application/json; charset=utf-8',
-                    crossDomain: true,
-                    dataType: 'jsonp',
-                    jsonp: 'callback',
-                    pageCache: options.cache,
-                    timeout: 5000 // timeout after 5 seconds
-                }).done(function ( jqXHR ) {
-                    options.successCallback(jqXHR);
-                }).fail(function ( jqXHR, textStatus ) {
-                    errorCallback();
-                });
-            },
             page: function () {
                 var parts = window.location.toString().split( '#' );
                 var location = parts.shift();
@@ -517,4 +516,4 @@ qg.swe.services = (function ( $, swe ) {
 
     return app;
 
-}( jQuery, qg.swe ) );
+}( jQuery, qg.swe, dataLayer ) );

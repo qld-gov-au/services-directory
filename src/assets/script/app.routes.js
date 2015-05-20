@@ -265,9 +265,9 @@ qg.swe.services = (function ( $, swe ) {
                     filter = app.get.filter(),
                     params = app.get.params(),
                     order = app.get.order(),
-                    franchise = (document.location.pathname.split('/')[1].toString() === 'services') ?  ' AND ( \"osssio\"=\'yes\' )' : '';
+                    franchise = (document.location.pathname.split('/')[1].toString() === 'dsitia') ?  ' AND ( \"osssio\"=\'yes\' )' : '';
                 // if the keywords are set, construct a filter OR get everything
-                if ( !!app.props.query && app.props.query.contains( 'dsitia' ) ) {
+                if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
                     var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 );
                     query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' )' + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 } else {

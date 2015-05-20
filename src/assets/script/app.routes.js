@@ -264,13 +264,14 @@ qg.swe.services = (function ( $, swe ) {
                 var query = null,
                     filter = app.get.filter(),
                     params = app.get.params(),
-                    order = app.get.order();
+                    order = app.get.order(),
+                    franchise = (document.location.pathname.split('/')[1].toString() === 'services') ?  ' AND ( \"osssio\"=\'yes\' )' : '';
                 // if the keywords are set, construct a filter OR get everything
-                if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
+                if ( !!app.props.query && app.props.query.contains( 'dsitia' ) ) {
                     var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 );
-                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' )' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' )' + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 } else {
-                    query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' )' + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                    query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' )'  + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 }
                 // run the data query method
                 // qg.data.get( args.resource.url, query, app.show.online );

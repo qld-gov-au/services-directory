@@ -530,7 +530,7 @@ module.exports = function (grunt) {
         build: {
             dev: {
                 tasks: [
-                    'clean:build',
+                    // 'clean:build',
                     'copy:build',
                     'copy:app',
                     'ssi:build',

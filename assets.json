@@ -1,13 +1,13 @@
 {
     "js": {
         "qgovServices": [
-            "bower_components/jQuery.XDomainRequest/jQuery.XDomainRequest.js",
-            "bower_components/html5-boilerplate/js/plugins.js",
-            "bower_components/placeholders/lib/utils.js",
-            "bower_components/placeholders/lib/main.js",
-            "bower_components/placeholders/lib/adapters/placeholders.jquery.js",
-            "bower_components/routie/lib/routie.js",
-            "bower_components/handlebars/handlebars.js",
+            "library/jQuery.XDomainRequest/jQuery.XDomainRequest.js",
+            "library/html5-boilerplate/js/plugins.js",
+            "library/placeholders/lib/utils.js",
+            "library/placeholders/lib/main.js",
+            "library/placeholders/lib/adapters/placeholders.jquery.js",
+            "library/routie/lib/routie.js",
+            "library/handlebars/handlebars.js",
             "src/assets/script/polyfill.js",
             "src/assets/script/app.routes.js"
         ]

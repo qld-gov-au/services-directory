@@ -177,7 +177,7 @@ qg.swe.services = (function ( $, swe ) {
             },
             reset: function () {
                 $form.find( '.reset' ).bind( 'click', function ( event ) {
-                    var relevanceStr = '?relevance='+app.props.relevance;
+                    var relevanceStr = (!! app.props.relevance && app.props.relevance != null ) ? '?relevance='+app.props.relevance : '';
                     event.preventDefault();
                     app.get.route();
                     if ( !!window.location.search ) {
@@ -276,16 +276,15 @@ qg.swe.services = (function ( $, swe ) {
                     params = app.get.params(),
                     order = app.get.order(),
                     relevance = app.get.relevance(),
-                    relevanceStr = null;
-                // Set relevance string
-                if( !! relevance ){
-                     relevanceStr = ' AND "relevance"=\'' + relevance + '\'';
-                } else {
                     relevanceStr = '';
+                // Set relevance string
+                if( !! relevance && relevance != null ){
+                     relevanceStr = ' AND "relevance"=\'' + relevance + '\'';
                 }
                 // if the keywords are set, construct a filter OR get everything
                 if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
                     var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 ).split('&')[0];
+                    keywords = 'Pay & Renew';
                     query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 } else {
                     query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
@@ -449,6 +448,7 @@ qg.swe.services = (function ( $, swe ) {
             relevance: function() {
                 if( !! app.props.query && app.props.query.contains( 'relevance' ) ) {
                     var relevance = app.props.query.split( 'relevance=' ).pop().split('&')[0];
+                    relevance = ( relevance == null || relevance == 'null' ) ? null: relevance;
                     app.props.relevance = relevance;
                     return relevance;
                 } else {

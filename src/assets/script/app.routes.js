@@ -447,6 +447,7 @@ qg.swe.services = (function ( $, swe ) {
             relevance: function() {
                 if( !! app.props.query && app.props.query.contains( 'relevance' ) ) {
                     var relevance = app.props.query.split( 'relevance=' ).pop().split('&')[0];
+                    relevance = ( relevance == null || relevance == 'null' ) ? null: relevance;
                     app.props.relevance = relevance;
                     return relevance;
                 } else {

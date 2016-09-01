@@ -29,10 +29,11 @@ qg.swe.services = (function ( $, swe ) {
             slug: 'transport-and-motoring'
         },
         resource: {
-        //  id: 'c361766e-f9d4-490a-817d-5effbdd97ba5',
-        //  url: 'staging.data.qld.gov.au'
-            id: '384429ae-fd27-4448-afe6-e4ecb8d1ad93',
-            url: 'data.qld.gov.au'
+            // id: 'c361766e-f9d4-490a-817d-5effbdd97ba5', <-- Note: couldn't find this resource
+            id: '15941f11-2f1d-4d8d-9245-563f4526f2ef',
+            url: 'staging.data.qld.gov.au'
+            // id: '384429ae-fd27-4448-afe6-e4ecb8d1ad93',
+            // url: 'data.qld.gov.au'
         }
     };
 
@@ -86,7 +87,8 @@ qg.swe.services = (function ( $, swe ) {
                 params: null,
                 location: null,
                 kiosk: null,
-                page: null
+                page: null,
+                franchise: null
             };
 
             // events
@@ -145,11 +147,34 @@ qg.swe.services = (function ( $, swe ) {
                         app.data.offline();
                         app.data.widget( args.category.slug );
                     }
+                },
+                '/franchise/:franchise/': function ( value ) {
+                    //console.log( 'Route: root' );
+                    app.empty();
+                    app.set.form();
+                    app.set.location();
+                    app.set.route( '/franchise/' + value + '/' );
+                    app.set.params( app.props.location );
+                    app.set.kiosk( app.props.location );
+                    app.get.query();
+                    app.get.page();
+                    app.data.online();
+                    app.data.offline();
+                    app.data.widget( args.category.slug );
+                    app.props.franchise = value;
+                    console.log( 'Franchise in routie: ', app.props.franchise );
                 }
             });
 
             // run route
             routie( app.props.route + ( !!app.props.query ? ( '?' + app.props.query ) : '' ) );
+
+            // Get franchise
+            /*
+            if( !!app.props.query && app.props.query.contains( 'franchise' ) ) {
+                this.props.franchise = app.props.query.split( 'franchise' ).pop().substr( 1 ).split('&')[0];
+            }
+            */
         },
         empty: function () {
             $list.empty();
@@ -160,6 +185,14 @@ qg.swe.services = (function ( $, swe ) {
                 $form.submit(function ( event ) {
                     event.preventDefault();
                     var values = [];
+                    // Franchise
+                    // NIM-DEV
+                    if( !! app.props.franchise ) {
+
+                        console.log( 'franchise in event.submit' + app.props.franchise );
+
+                        values.push( 'franchise=' + app.props.franchise );
+                    }
                     $form.find( '.form-section' ).find( 'input, select' ).each(function () {
                         !$( this ).val() || values.push( $( this ).attr( 'id' ) + '=' + $( this ).val().replace( / /g, '+' ) );
                     });
@@ -265,14 +298,20 @@ qg.swe.services = (function ( $, swe ) {
                     filter = app.get.filter(),
                     params = app.get.params(),
                     order = app.get.order(),
-                    franchise = (document.location.pathname.split('/')[1].toString() === 'dsitia') ?  ' AND ( \"osssio\"=\'yes\' )' : '';
+                    // franchise = (document.location.pathname.split('/')[1].toString() === 'dsitia') ?  ' AND ( \"osssio\"=\'yes\' )' : '';
+                    franchise = app.get.franchise();
                 // if the keywords are set, construct a filter OR get everything
-                if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
-                    var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 );
-                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' )' + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
-                } else {
-                    query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' )'  + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                if( !! franchise ){
+                     franchise = ' AND "franchise"=\'' + franchise + '\'';
                 }
+                console.log( 'franchise in data.online:' , franchise );
+                if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
+                    var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 ).split('&')[0];
+                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' ) ' + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                } else {
+                    query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' ) ' + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                }
+                console.log( 'query in data.online', query );
                 // run the data query method
                 // qg.data.get( args.resource.url, query, app.show.online );
                 app.get.data( args.resource.url, query, app.show.online );
@@ -394,7 +433,7 @@ qg.swe.services = (function ( $, swe ) {
 //                                query += ' AND ( \"' + ( column + '-slug' ) + '\"=\'' + value + '\' )';
 //                            }
                             if ( column !== 'keywords' ) {
-                                query += ' AND ( \"' + ( column + '-slug' ) + '\"=\'' + value + '\' )';
+                                query += ' AND ( \"' + ( column + '-slug' ) + '\"=\'' + value + '\' )'; // '-slug' Why was this here?
                             }
                         }
                     }
@@ -426,6 +465,16 @@ qg.swe.services = (function ( $, swe ) {
                     }
                 });
                 return values.join( '&' );
+            },
+            franchise: function() {
+                // NIM-DEV
+                if( app.props.route.contains( 'franchise' ) ) {
+                    return app.props.route.split( 'franchise/' ).pop().split('/')[0];
+                } else {
+                    return null;
+                }
+                //var str = app.props.query.split( 'franchise' ).pop().substr( 1 ).split('&')[0];
+                //var array = str.split('/');
             }
         },
         set: {

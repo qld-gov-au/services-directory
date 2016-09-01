@@ -34,11 +34,11 @@ qg.swe.services = (function ( $, swe ) {
             id: '15941f11-2f1d-4d8d-9245-563f4526f2ef',
             url: 'staging.data.qld.gov.au'
         }
-        resource: {
-            // Prod
-            id: '384429ae-fd27-4448-afe6-e4ecb8d1ad93',
-            url: 'data.qld.gov.au'
-        }
+        // resource: {
+        //     // Prod
+        //     id: '384429ae-fd27-4448-afe6-e4ecb8d1ad93',
+        //     url: 'data.qld.gov.au'
+        // }
     };
 
     // locations
@@ -292,6 +292,8 @@ qg.swe.services = (function ( $, swe ) {
                 }
                 // run the data query method
                 // qg.data.get( args.resource.url, query, app.show.online );
+                // NIM - DEV
+                console.log( 'query in data.online', query );
                 app.get.data( args.resource.url, query, app.show.online );
             },
             offline: function () {

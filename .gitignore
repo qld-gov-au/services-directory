@@ -11,3 +11,4 @@ _bak
 *.bak*
 *.new*
 _local.
+_local/

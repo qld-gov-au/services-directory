@@ -82,14 +82,14 @@ qg.swe.services = (function ( $, swe ) {
     };
 
     // Custom dictionary for keywords. Uses regex on both sides
-    var dictionary = {
-        replace: {
-            'stamp.duty': 'transfer duty'
-        },
-        supplement: {
-            'test': 'work'
-        }
-    };
+    // var dictionary = {
+    //     replace: {
+    //         'stamp.duty': 'transfer duty'
+    //     },
+    //     supplement: {
+    //         'test': 'work'
+    //     }
+    // };
 
     var app = {
         init: function () {
@@ -249,21 +249,21 @@ qg.swe.services = (function ( $, swe ) {
                 var key,
                     regex;
                 // Dictionary supplement and replace
-                keywords = keywords.replace('+',' '); // Clean up '+' for spaces
-                for( key in dictionary.supplement ) {
-                    console.log('loop',key,keywords);
-                    if( dictionary.supplement.hasOwnProperty(key) ) {
-                        regex = new RegExp( key.replace(' ','+') );
-                        console.log('loop',key,regex);
-                        keywords = keywords.replace( regex, key + '|' +dictionary.supplement[key] );
-                    }
-                }
-                for( key in dictionary.replace ) {
-                    if( dictionary.replace.hasOwnProperty( key.replace(' ','+') ) ) {
-                        regex = new RegExp(key);
-                        keywords = keywords.replace( regex, dictionary.replace[key] );
-                    }
-                }
+                keywords = keywords.replace('+',' ').toLowerCase(); // Clean up '+' for spaces
+                // for( key in dictionary.supplement ) {
+                //     console.log('loop',key,keywords);
+                //     if( dictionary.supplement.hasOwnProperty(key) ) {
+                //         regex = new RegExp( key.replace(' ','+') );
+                //         console.log('loop',key,regex);
+                //         keywords = keywords.replace( regex, key + '|' +dictionary.supplement[key] );
+                //     }
+                // }
+                // for( key in dictionary.replace ) {
+                //     if( dictionary.replace.hasOwnProperty( key.replace(' ','+') ) ) {
+                //         regex = new RegExp(key);
+                //         keywords = keywords.replace( regex, dictionary.replace[key] );
+                //     }
+                // }
                 // clean for to_tsquery
                 console.log( keywords );
                 keywords = keywords.replace(/[\+\s]/g,' & ');
@@ -313,13 +313,13 @@ qg.swe.services = (function ( $, swe ) {
                     relevanceStr = '';
                 // Set relevance string
                 if( !! relevance && relevance != null ){
-                     relevanceStr = ' AND "relevance"=\'' + relevance + '\'';
+                     relevanceStr = ' AND "relevance" LIKE \'%' + relevance + '%\'';
                 }
                 // if the keywords are set, construct a filter OR get everything
                 if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
                     var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 ).split('&')[0];
                     keywords = app.parse.keywords( keywords );
-                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', to_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 } else {
                     query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 }
@@ -483,6 +483,7 @@ qg.swe.services = (function ( $, swe ) {
                 if( !! app.props.query && app.props.query.contains( 'relevance' ) ) {
                     var relevance = app.props.query.split( 'relevance=' ).pop().split('&')[0];
                     relevance = ( relevance == null || relevance == 'null' ) ? null: relevance;
+                    relevance = relevance.replace('+',' ').toLowerCase();
                     app.props.relevance = relevance;
                     return relevance;
                 } else {

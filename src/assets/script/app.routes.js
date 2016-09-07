@@ -134,7 +134,7 @@ qg.swe.services = (function ( $, swe ) {
                     app.data.widget( args.category.slug );
                 },
                 '/:query': function ( value ) {
-                    //console.log( 'Route: query' );
+                    console.log( 'Route: query' );
                     app.empty();
                     app.set.form( value );
                     app.set.location();
@@ -175,6 +175,8 @@ qg.swe.services = (function ( $, swe ) {
         event: {
             submit: function () {
                 $form.submit(function ( event ) {
+                    var $submitTarget;
+                    console.log( 'submit triggered', event );
                     event.preventDefault();
                     var values = [];
                     if( !! app.props.relevance ) {
@@ -184,7 +186,21 @@ qg.swe.services = (function ( $, swe ) {
                         !$( this ).val() || values.push( $( this ).attr( 'id' ) + '=' + $( this ).val().replace( / /g, '+' ) );
                     });
                     app.set.query( values );
+
+                    // Hack to get around SWE
+                    $submitTarget = $(this).find('input[type=submit]');
+                    $submitTarget.prop('disabled', true);
+                    setTimeout(
+                        (function( $submitTarget ){
+                            return function() {
+                                console.log('timeout', $submitTarget);
+                                // $(this).find('input[type=submit]').prop('disabled', false);
+                                $submitTarget.prop('disabled', false);
+                            };
+                        }($submitTarget)
+                    ), 10000);
                 });
+
             },
             reset: function () {
                 // Binds the reset function
@@ -224,11 +240,14 @@ qg.swe.services = (function ( $, swe ) {
             },
             clearRelevance: function() {
                 // resets the relevance
-                var props = app.props.query.replace('relevance='+app.props.relevance,'').replace('&&','&').replace(/^&/,'').replace(/&$/,'').split('&');
-                console.log( 'app.props', app.props.query );
+                var props,
+                    queryString;
+                props = app.props.query.replace('relevance='+app.props.relevance,'').replace('&&','&').replace(/^&/,'').replace(/&$/,'').split('&');
+                queryString = app.props.query.replace('relevance='+app.props.relevance,'').replace('&&','&').replace(/^&/,'').replace(/&$/,'');
                 app.props.relevance = null;
-                console.log( 'props', props ); 
-                app.set.query( props);
+
+                app.set.query( props );
+                routie( app.props.route + '?' + queryString );
             }
 
         },
@@ -292,7 +311,6 @@ qg.swe.services = (function ( $, swe ) {
                 //     }
                 // }
                 // clean for to_tsquery
-                console.log( keywords );
                 keywords = keywords.replace(/[\+\s]/g,' & ');
                 return keywords;
             }
@@ -340,7 +358,7 @@ qg.swe.services = (function ( $, swe ) {
                     relevanceStr = '';
                 // Set relevance string
                 if( !! relevance && relevance != null ){
-                     relevanceStr = ' AND "relevance" LIKE \'%' + relevance + '%\'';
+                     relevanceStr = ' AND lower( "relevance" ) LIKE lower( \'%' + app.get.relevance() + '%\' )';
                 }
                 // if the keywords are set, construct a filter OR get everything
                 if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
@@ -353,7 +371,6 @@ qg.swe.services = (function ( $, swe ) {
                 // run the data query method
                 // qg.data.get( args.resource.url, query, app.show.online );
                 // NIM - DEV
-                console.log( 'query in data.online', query );
                 app.get.data( args.resource.url, query, app.show.online );
             },
             offline: function () {
@@ -415,8 +432,10 @@ qg.swe.services = (function ( $, swe ) {
                     pageCache: options.cache,
                     timeout: 5000 // timeout after 5 seconds
                 }).done(function ( jqXHR ) {
+                    console.log( 'get.data timeout DONE');
                     options.successCallback(jqXHR);
                 }).fail(function ( jqXHR, textStatus ) {
+                    console.log( 'get.data timeout FAIL');
                     errorCallback();
                 });
             },
@@ -512,7 +531,7 @@ qg.swe.services = (function ( $, swe ) {
                     relevance = ( relevance == null || relevance == 'null' ) ? null: relevance;
                     relevance = relevance.replace('+',' ').toLowerCase();
                     app.props.relevance = relevance;
-                    $('#search-filter').html( 'Searching for services related to <em>' + relevance + '</em>. <a href="#">Search all services</a>' );
+                    $('#search-filter').html( 'Searching for services related to <em><strong>' + relevance + '</strong></em>. &nbsp; <a href="#">Search all services instead</a>' );
                     $('#search-filter a').on( 'click', function() {
                         app.action.clearRelevance();
                     });

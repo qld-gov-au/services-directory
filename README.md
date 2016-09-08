@@ -29,13 +29,15 @@ With the development server running, watch tasks are instantiated. This means th
 
 Once you are happy with the application and want to deploy some development files for checking, simply run the ```grunt build:stage``` task. This will compile all the files in a state that is ready to be deployed to a server for user testing.
 
-## Staging
+## Staging / UAT
 
 Files need to be distributed to a series of locations in teamsite for staging.
 
 * `assets/script/apps` is to be sent to main/www.qld.gov.au/WORKAREA/assets/assets/script/apps
 * `assets/services` is to be sent to main/www.qld.gov.au/WORKAREA/assets/assets/script/apps
 * `services/` is to be sent to main/www.qld.gov.au/core/WORKAREA/content/services
+
+These files are then to be submitted to 'UAT (qld-uat.ssq.qld.gov.au) - NO STAGING (Amazon)'
 
 ## Production
 

@@ -29,17 +29,21 @@ qg.swe.services = (function ( $, swe ) {
             slug: 'transport-and-motoring'
         },
         resource: {
+            // Prod
+            id: '384429ae-fd27-4448-afe6-e4ecb8d1ad93',
+            url: 'data.qld.gov.au'
+        }
+    };
+
+    // Set to staging server if detected
+    if (window.location.href.indexOf('qld-uat.ssq.qld.gov.au') > -1 || window.location.href.indexOf('local') > -1) {
+        args.resource = {
             // Staging
             // id: 'c361766e-f9d4-490a-817d-5effbdd97ba5', <-- Note: couldn't find this resource
             id: '15941f11-2f1d-4d8d-9245-563f4526f2ef',
             url: 'staging.data.qld.gov.au'
-        }
-        // resource: {
-        //     // Prod
-        //     id: '384429ae-fd27-4448-afe6-e4ecb8d1ad93',
-        //     url: 'data.qld.gov.au'
-        // }
-    };
+        };
+    }
 
     // locations
     var locations = {

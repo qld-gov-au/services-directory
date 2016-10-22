@@ -29,12 +29,21 @@ qg.swe.services = (function ( $, swe ) {
             slug: 'transport-and-motoring'
         },
         resource: {
-//            id: 'c361766e-f9d4-490a-817d-5effbdd97ba5',
-//            url: 'staging.data.qld.gov.au'
+            // Prod
             id: '384429ae-fd27-4448-afe6-e4ecb8d1ad93',
             url: 'data.qld.gov.au'
         }
     };
+
+    // Set to staging server if detected
+    if (window.location.href.indexOf('qld-uat.ssq.qld.gov.au') > -1 || window.location.href.indexOf('local') > -1) {
+        args.resource = {
+            // Staging
+            // id: 'c361766e-f9d4-490a-817d-5effbdd97ba5', <-- Note: couldn't find this resource
+            id: '15941f11-2f1d-4d8d-9245-563f4526f2ef',
+            url: 'staging.data.qld.gov.au'
+        };
+    }
 
     // locations
     var locations = {
@@ -76,6 +85,16 @@ qg.swe.services = (function ( $, swe ) {
         }
     };
 
+    // Custom dictionary for keywords. Uses regex on both sides
+    // var dictionary = {
+    //     replace: {
+    //         'stamp.duty': 'transfer duty'
+    //     },
+    //     supplement: {
+    //         'test': 'work'
+    //     }
+    // };
+
     var app = {
         init: function () {
             // properties
@@ -86,7 +105,8 @@ qg.swe.services = (function ( $, swe ) {
                 params: null,
                 location: null,
                 kiosk: null,
-                page: null
+                page: null,
+                relevance: null
             };
 
             // events
@@ -96,6 +116,7 @@ qg.swe.services = (function ( $, swe ) {
             this.get.route();
             this.get.query();
             this.set.toggle();
+            this.get.relevance();
 
             // empty
             app.empty();
@@ -117,7 +138,7 @@ qg.swe.services = (function ( $, swe ) {
                     app.data.widget( args.category.slug );
                 },
                 '/:query': function ( value ) {
-                    //console.log( 'Route: query' );
+                    console.log( 'Route: query' );
                     app.empty();
                     app.set.form( value );
                     app.set.location();
@@ -158,23 +179,47 @@ qg.swe.services = (function ( $, swe ) {
         event: {
             submit: function () {
                 $form.submit(function ( event ) {
+                    var $submitTarget;
+                    console.log( 'submit triggered', event );
                     event.preventDefault();
                     var values = [];
+                    if( !! app.props.relevance ) {
+                        values.push( 'relevance=' + app.props.relevance ); // Add Relevance
+                    }
                     $form.find( '.form-section' ).find( 'input, select' ).each(function () {
                         !$( this ).val() || values.push( $( this ).attr( 'id' ) + '=' + $( this ).val().replace( / /g, '+' ) );
                     });
                     app.set.query( values );
+
+                    // Hack to get around SWE
+                    $submitTarget = $(this).find('input[type=submit]');
+                    $submitTarget.prop('disabled', true);
+                    setTimeout(
+                        (function( $submitTarget ){
+                            return function() {
+                                console.log('timeout', $submitTarget);
+                                // $(this).find('input[type=submit]').prop('disabled', false);
+                                $submitTarget.prop('disabled', false);
+                            };
+                        }($submitTarget)
+                    ), 10000);
                 });
+
             },
             reset: function () {
+                // Binds the reset function
                 $form.find( '.reset' ).bind( 'click', function ( event ) {
+                    app.action.reset( true );
+                    /*
+                    var relevanceStr = (!! app.props.relevance && app.props.relevance != null ) ? '?relevance='+app.props.relevance : '';
                     event.preventDefault();
                     app.get.route();
                     if ( !!window.location.search ) {
-                        routie( app.props.route + window.location.search );
+                        routie( app.props.route + relevanceStr + window.location.search );
                     } else {
-                        routie( app.props.route );
+                        routie( app.props.route + relevanceStr );
                     }
+                    */
                 });
             },
             toggle: function () {
@@ -184,6 +229,31 @@ qg.swe.services = (function ( $, swe ) {
                     $form.is( ':visible' ) ? $( this ).addClass( 'up' ) : $( this ).removeClass( 'up' );
                 });
             }
+        },
+        action: {
+            reset: function() {
+                // Actually re-sets the form
+                var relevanceStr = (!! app.props.relevance && app.props.relevance != null ) ? '?relevance='+app.props.relevance : '';
+
+                app.get.route();
+                if ( !!window.location.search ) {
+                    routie( app.props.route + relevanceStr + window.location.search );
+                } else {
+                    routie( app.props.route + relevanceStr );
+                }
+            },
+            clearRelevance: function() {
+                // resets the relevance
+                var props,
+                    queryString;
+                props = app.props.query.replace('relevance='+app.props.relevance,'').replace('&&','&').replace(/^&/,'').replace(/&$/,'').split('&');
+                queryString = app.props.query.replace('relevance='+app.props.relevance,'').replace('&&','&').replace(/^&/,'').replace(/&$/,'');
+                app.props.relevance = null;
+
+                app.set.query( props );
+                routie( app.props.route + '?' + queryString );
+            }
+
         },
         parse: {
             online: function ( records ) {
@@ -224,6 +294,29 @@ qg.swe.services = (function ( $, swe ) {
                     }
                 }
                 return result;
+            },
+            keywords: function( keywords ) {
+                var key,
+                    regex;
+                // Dictionary supplement and replace
+                keywords = keywords.replace('+',' ').toLowerCase(); // Clean up '+' for spaces
+                // for( key in dictionary.supplement ) {
+                //     console.log('loop',key,keywords);
+                //     if( dictionary.supplement.hasOwnProperty(key) ) {
+                //         regex = new RegExp( key.replace(' ','+') );
+                //         console.log('loop',key,regex);
+                //         keywords = keywords.replace( regex, key + '|' +dictionary.supplement[key] );
+                //     }
+                // }
+                // for( key in dictionary.replace ) {
+                //     if( dictionary.replace.hasOwnProperty( key.replace(' ','+') ) ) {
+                //         regex = new RegExp(key);
+                //         keywords = keywords.replace( regex, dictionary.replace[key] );
+                //     }
+                // }
+                // clean for to_tsquery
+                keywords = keywords.replace(/[\+\s]/g,' & ');
+                return keywords;
             }
         },
         show: {
@@ -265,16 +358,23 @@ qg.swe.services = (function ( $, swe ) {
                     filter = app.get.filter(),
                     params = app.get.params(),
                     order = app.get.order(),
-                    franchise = (document.location.pathname.split('/')[1].toString() === 'dsitia') ?  ' AND ( \"osssio\"=\'yes\' )' : '';
+                    relevance = app.get.relevance(),
+                    relevanceStr = '';
+                // Set relevance string
+                if( !! relevance && relevance != null ){
+                     relevanceStr = ' AND lower( "relevance" ) LIKE lower( \'%' + app.get.relevance() + '%\' )';
+                }
                 // if the keywords are set, construct a filter OR get everything
                 if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
-                    var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 );
-                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' )' + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                    var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 ).split('&')[0];
+                    keywords = app.parse.keywords( keywords );
+                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 } else {
-                    query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' )'  + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                    query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 }
                 // run the data query method
                 // qg.data.get( args.resource.url, query, app.show.online );
+                // NIM - DEV
                 app.get.data( args.resource.url, query, app.show.online );
             },
             offline: function () {
@@ -336,8 +436,10 @@ qg.swe.services = (function ( $, swe ) {
                     pageCache: options.cache,
                     timeout: 5000 // timeout after 5 seconds
                 }).done(function ( jqXHR ) {
+                    console.log( 'get.data timeout DONE');
                     options.successCallback(jqXHR);
                 }).fail(function ( jqXHR, textStatus ) {
+                    console.log( 'get.data timeout FAIL');
                     errorCallback();
                 });
             },
@@ -393,7 +495,7 @@ qg.swe.services = (function ( $, swe ) {
 //                            } else {
 //                                query += ' AND ( \"' + ( column + '-slug' ) + '\"=\'' + value + '\' )';
 //                            }
-                            if ( column !== 'keywords' ) {
+                            if ( column !== 'keywords' && column !== 'relevance' ) {
                                 query += ' AND ( \"' + ( column + '-slug' ) + '\"=\'' + value + '\' )';
                             }
                         }
@@ -426,6 +528,22 @@ qg.swe.services = (function ( $, swe ) {
                     }
                 });
                 return values.join( '&' );
+            },
+            relevance: function() {
+                if( !! app.props.query && app.props.query.contains( 'relevance' ) ) {
+                    var relevance = app.props.query.split( 'relevance=' ).pop().split('&')[0];
+                    relevance = ( relevance == null || relevance == 'null' ) ? null: relevance;
+                    relevance = relevance.replace('+',' ').toLowerCase();
+                    app.props.relevance = relevance;
+                    $('#search-filter').html( 'Searching for services related to <em><strong>' + relevance + '</strong></em>. &nbsp; <a href="#">Search all services instead</a>' );
+                    $('#search-filter a').on( 'click', function() {
+                        app.action.clearRelevance();
+                    });
+                    return relevance;
+                } else {
+                    $('#search-filter').html('');
+                    return null;
+                }
             }
         },
         set: {

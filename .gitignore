@@ -1,5 +1,6 @@
 node_modules/
 bower_components/
+library/
 *.log
 
 .tmp/
@@ -9,3 +10,5 @@ build/
 _bak
 *.bak*
 *.new*
+_local.
+_local/

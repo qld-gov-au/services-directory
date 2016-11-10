@@ -359,7 +359,8 @@ qg.swe.services = (function ( $, swe ) {
                     params = app.get.params(),
                     order = app.get.order(),
                     relevance = app.get.relevance(),
-                    relevanceStr = '';
+                    relevanceStr = '',
+                    franchise = (document.location.pathname.split('/')[1].toString() === 'dsiti') ?  ' AND ( \"osssio\"=\'yes\' )' : '';
                 // Set relevance string
                 if( !! relevance && relevance != null ){
                      relevanceStr = ' AND lower( "relevance" ) LIKE lower( \'%' + app.get.relevance() + '%\' )';
@@ -368,9 +369,9 @@ qg.swe.services = (function ( $, swe ) {
                 if ( !!app.props.query && app.props.query.contains( 'keywords' ) ) {
                     var keywords = app.props.query.split( 'keywords' ).pop().substr( 1 ).split('&')[0];
                     keywords = app.parse.keywords( keywords );
-                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                    query = 'SELECT * FROM "' + args.resource.id + '"' + ', plainto_tsquery(  \'english\', \'' + keywords + '\'  ) query' + filter + params + ' AND _full_text @@ query' + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 } else {
-                    query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
+                    query = 'SELECT * FROM \"' + args.resource.id + '\"' + filter + params + ' AND ( \"available\"=\'yes\' ) ' + relevanceStr + franchise + ' ORDER BY ' + order + ', \"' + args.orderBy + '\"';
                 }
                 // run the data query method
                 // qg.data.get( args.resource.url, query, app.show.online );

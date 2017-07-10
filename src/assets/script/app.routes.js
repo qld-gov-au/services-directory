@@ -435,10 +435,8 @@ qg.swe.services = (function ( $, swe ) {
                     jsonp: 'callback',
                     pageCache: options.cache
                 }).done(function ( jqXHR ) {
-                    console.log( 'get.data timeout DONE');
                     options.successCallback(jqXHR);
                 }).fail(function ( jqXHR, textStatus ) {
-                    console.log( 'get.data timeout FAIL');
                     errorCallback();
                 });
             },

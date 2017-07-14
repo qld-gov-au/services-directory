@@ -433,13 +433,10 @@ qg.swe.services = (function ( $, swe ) {
                     crossDomain: true,
                     dataType: 'jsonp',
                     jsonp: 'callback',
-                    pageCache: options.cache,
-                    timeout: 5000 // timeout after 5 seconds
+                    pageCache: options.cache
                 }).done(function ( jqXHR ) {
-                    console.log( 'get.data timeout DONE');
                     options.successCallback(jqXHR);
                 }).fail(function ( jqXHR, textStatus ) {
-                    console.log( 'get.data timeout FAIL');
                     errorCallback();
                 });
             },
